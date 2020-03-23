@@ -1,0 +1,8 @@
+
+island-settings:
+  sea-level: 0
+  limits:
+    monster: 100
+    ambient: 100
+    animal: 100
+    water: 100

@@ -1,0 +1,11 @@
+name: Skyblock
+main: xyz.oribuin.skyblock.Skyblock
+version: 1.0-BETA
+author: Oribuin
+api-version: "1.13"
+description: Skyblock plugin designed and created by Oribuin
+website: https://oribuin.xyz/
+depend:
+  - PlaceholderAPI
+loadbefore:
+  - Multiverse-Core
