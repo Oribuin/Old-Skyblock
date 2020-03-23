@@ -23,6 +23,7 @@ public class Skyblock extends JavaPlugin {
         createFile("messages.yml");
         createFolder("islanddata");
         createFolder("playerdata");
+        createFolder("schematics");
 
         createWorld("islands_normal", World.Environment.NORMAL);
         createWorld("islands_nether", World.Environment.NETHER);
