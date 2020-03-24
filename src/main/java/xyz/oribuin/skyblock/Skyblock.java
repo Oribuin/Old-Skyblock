@@ -13,11 +13,18 @@ import java.nio.file.Paths;
 
 public class Skyblock extends JavaPlugin {
 
+    private static Skyblock instance;
+
     private ChunkGeneratorWorld chunkGenerator = new ChunkGeneratorWorld(this);
+
+    public static Skyblock getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
 
+        instance = this;
         this.saveDefaultConfig();
 
         createFile("messages.yml");
