@@ -30,6 +30,7 @@ public class Island {
         islandSettingsKey.clear();
         islandSettingsKey.add("");
     }
+
     private HashMap<SettingsFlag, Boolean> igs = new HashMap<>();
     private int levelHandicap;
     private WorldBorder worldBorder;
@@ -44,11 +45,33 @@ public class Island {
         this.center = new Location(world, x, 72, z);
     }
 
-    public void setIgsDefaults() {
-        for (SettingsFlag flag : SettingsFlag.values()) {
-            // Sort out flags
-        }
+    public Island(Skyblock skyblock, int x, int z) {
+        this(skyblock, x, z, null);
     }
+
+    public Island(Skyblock skyblock, int x, int z, UUID owner) {
+        this.skyblock = skyblock;
+        this.world = Bukkit.getWorld("islands_normal");
+        this.center = new Location(world, x, 72, z);
+        this.owner = owner;
+    }
+
+    public Island(Island island) {
+        this.skyblock = island.skyblock;
+        this.biome = island.biome == null ? null : Biome.valueOf(island.biome.name());
+        this.center = island.center != null ? island.center.clone() : null;
+        this.size = island.size;
+        this.locked = island.locked;
+        this.levelHandicap = island.levelHandicap;
+        this.owner = island.owner == null ? null : UUID.fromString(island.owner.toString());
+        this.name = island.name;
+        this.spawnPoint = island.spawnPoint;
+        this.worldBorder = island.worldBorder;
+        this.tileEntityCount.addAll(island.tileEntityCount);
+        this.world = island.world == null ? null : Bukkit.getWorld(island.world.getUID());
+
+    }
+
     public enum SettingsFlag {
         ANVIL,
         ARMOR_STAND,
