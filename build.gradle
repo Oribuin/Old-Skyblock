@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'xyz.oribuin'
-version '1.0-BETA'
+version '1.0'
 compileJava.options.encoding = 'UTF-8'
 
 sourceCompatibility = 1.8
@@ -22,7 +22,8 @@ repositories {
 dependencies {
     shadow 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.4'
-    implementation 'dev.esophose:guiframework:1.0.1'
+    implementation 'dev.esophose:guiframework:1.0.1';
+
 }
 
 shadowJar {

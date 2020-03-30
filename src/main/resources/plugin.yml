@@ -9,3 +9,7 @@ depend:
   - PlaceholderAPI
 loadbefore:
   - Multiverse-Core
+commands:
+  test:
+    description: Test Command
+    usage: /test

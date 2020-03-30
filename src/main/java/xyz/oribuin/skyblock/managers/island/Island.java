@@ -5,7 +5,9 @@ import com.google.common.collect.Multiset;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
+import org.bukkit.entity.Player;
 import xyz.oribuin.skyblock.Skyblock;
+import xyz.oribuin.skyblock.utilities.Chat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +17,8 @@ import java.util.UUID;
 public class Island {
 
     private Skyblock skyblock;
-    private int size;
+    private int getX;
+    private int getZ;
     private Location center;
     private World world;
     private UUID owner;
@@ -37,10 +40,8 @@ public class Island {
 
     public Island(Skyblock skyblock, String serial, List<String> islandSettingsKey) {
         this.skyblock = skyblock;
-
-        int x = size / 2;
-        int z = size / 2;
-
+        int x = getX / 2;
+        int z = getZ / 2;
         this.world = Bukkit.getWorld("islands_normal");
         this.center = new Location(world, x, 72, z);
     }
@@ -60,7 +61,8 @@ public class Island {
         this.skyblock = island.skyblock;
         this.biome = island.biome == null ? null : Biome.valueOf(island.biome.name());
         this.center = island.center != null ? island.center.clone() : null;
-        this.size = island.size;
+        this.getX = island.getX;
+        this.getZ = island.getZ;
         this.locked = island.locked;
         this.levelHandicap = island.levelHandicap;
         this.owner = island.owner == null ? null : UUID.fromString(island.owner.toString());
@@ -69,8 +71,72 @@ public class Island {
         this.worldBorder = island.worldBorder;
         this.tileEntityCount.addAll(island.tileEntityCount);
         this.world = island.world == null ? null : Bukkit.getWorld(island.world.getUID());
-
     }
+
+    public Biome getBiome() {
+        return biome;
+    }
+
+    public void setBiome(Biome biome) {
+        this.biome = biome;
+    }
+
+    public int getSize() {
+        return getX * getZ;
+    }
+
+    public boolean isLocked() {
+        return this.locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public Player getOwner() {
+        return Bukkit.getPlayer(this.owner);
+    }
+
+    public void setOwner(Island island, UUID uuid) {
+        this.owner = uuid;
+    }
+
+    public UUID getOwnerUUID() {
+        return this.owner;
+    }
+
+    public Island getIsland() {
+        return this;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = Chat.cl(name);
+    }
+
+    public int getLevel() {
+        return this.levelHandicap;
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
+
+    public Location getSpawnPoint() {
+        return this.spawnPoint;
+    }
+
+    public void setSpawnPoint(Location location) {
+        this.spawnPoint = location;
+    }
+
+    public Location getCenter() {
+        return this.center;
+    }
+
 
     public enum SettingsFlag {
         ANVIL,
