@@ -2,17 +2,13 @@ package xyz.oribuin.skyblock.managers.island;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import xyz.oribuin.skyblock.Skyblock;
-import xyz.oribuin.skyblock.utilities.Chat;
+import xyz.oribuin.skyblock.utilities.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Island {
 
@@ -27,14 +23,8 @@ public class Island {
     private Location spawnPoint;
     private Multiset<Material> tileEntityCount = HashMultiset.create();
     private Biome biome;
-    private static final List<String> islandSettingsKey = new ArrayList<>();
 
-    static {
-        islandSettingsKey.clear();
-        islandSettingsKey.add("");
-    }
-
-    private HashMap<SettingsFlag, Boolean> igs = new HashMap<>();
+    private Map<SettingsFlag, Boolean> map = new EnumMap(SettingsFlag.class);
     private int levelHandicap;
     private WorldBorder worldBorder;
 
@@ -44,10 +34,6 @@ public class Island {
         int z = getZ / 2;
         this.world = Bukkit.getWorld("islands_normal");
         this.center = new Location(world, x, 72, z);
-    }
-
-    public Island(Skyblock skyblock, int x, int z) {
-        this(skyblock, x, z, null);
     }
 
     public Island(Skyblock skyblock, int x, int z, UUID owner) {
@@ -114,7 +100,7 @@ public class Island {
     }
 
     public void setName(String name) {
-        this.name = Chat.cl(name);
+        this.name = Color.msg(name);
     }
 
     public int getLevel() {
@@ -137,6 +123,17 @@ public class Island {
         return this.center;
     }
 
+    public WorldBorder getWorldBorder() {
+        return this.worldBorder;
+    }
+
+    public void setWorldBorder(WorldBorder worldBorder) {
+        if (worldBorder != null) {
+            worldBorder.setCenter(getIsland().getCenter());
+            worldBorder.setSize(getIsland().getSize());
+            worldBorder.setDamageAmount(0);
+        }
+    }
 
     public enum SettingsFlag {
         ANVIL,

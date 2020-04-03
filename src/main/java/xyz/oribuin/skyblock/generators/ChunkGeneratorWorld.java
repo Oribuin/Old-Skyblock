@@ -7,7 +7,9 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import xyz.oribuin.skyblock.Skyblock;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class ChunkGeneratorWorld extends ChunkGenerator {
 
@@ -56,6 +58,6 @@ public class ChunkGeneratorWorld extends ChunkGenerator {
         for (int x = 0; x < 16; x++)
             for (int z = 0; z < 16; z++)
                 for (int y = 0; y < 256; y++)
-                biomeGrid.setBiome(x, y, z, biome);
+                    biomeGrid.setBiome(x, y, z, biome);
     }
 }

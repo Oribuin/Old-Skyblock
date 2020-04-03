@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     shadow 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.10.4'
+    compileOnly 'me.clip:placeholderapi:2.10.5'
     implementation 'dev.esophose:guiframework:1.0.1';
 
 }

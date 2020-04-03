@@ -8,10 +8,7 @@ import org.bukkit.entity.Player;
 import xyz.oribuin.skyblock.Skyblock;
 import xyz.oribuin.skyblock.managers.island.Island;
 import xyz.oribuin.skyblock.managers.island.IslandManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import xyz.oribuin.skyblock.utilities.Color;
 
 public class CmdTest implements CommandExecutor {
     private final Skyblock plugin;
@@ -27,8 +24,8 @@ public class CmdTest implements CommandExecutor {
         Island island = new Island(plugin, 150, 150, player.getUniqueId());
         IslandManager islandManager = new IslandManager(plugin);
 
-        islandManager.createIsland(player.getUniqueId());
-        player.sendMessage(ChatColor.AQUA + "Created Island.");
+        islandManager.createIsland("&bTest", player.getUniqueId());
+        player.sendMessage(Color.msg("&aCreated island: " + island.getName()));
         player.teleport(island.getCenter());
         return true;
     }
