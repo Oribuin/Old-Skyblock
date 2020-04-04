@@ -10,6 +10,8 @@ depend:
 loadbefore:
   - Multiverse-Core
 commands:
-  test:
-    description: Test Command
-    usage: /test
+  island:
+    description: Main Island Command
+    usage: /island
+    aliases:
+      - is

@@ -5,8 +5,9 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.oribuin.skyblock.commands.CmdTest;
+import xyz.oribuin.skyblock.commands.CmdIsland;
 import xyz.oribuin.skyblock.generators.ChunkGeneratorWorld;
+import xyz.oribuin.skyblock.utilities.TabComplete;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,8 @@ public class Skyblock extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        getCommand("test").setExecutor(new CmdTest(this));
+        getCommand("island").setExecutor(new CmdIsland(this));
+        getCommand("island").setTabCompleter(new TabComplete(this));
 
         createFile("messages.yml");
         createFolder("schematics");

@@ -24,7 +24,7 @@ public class Island {
     private Multiset<Material> tileEntityCount = HashMultiset.create();
     private Biome biome;
 
-    private Map<SettingsFlag, Boolean> map = new EnumMap(SettingsFlag.class);
+    private EnumMap<SettingsFlag, Boolean> map = new EnumMap<>(SettingsFlag.class);
     private int levelHandicap;
     private WorldBorder worldBorder;
 
@@ -36,11 +36,13 @@ public class Island {
         this.center = new Location(world, x, 72, z);
     }
 
-    public Island(Skyblock skyblock, int x, int z, UUID owner) {
+    public Island(Skyblock skyblock, int x, int z, UUID owner, String name) {
         this.skyblock = skyblock;
         this.world = Bukkit.getWorld("islands_normal");
         this.center = new Location(world, x, 72, z);
         this.owner = owner;
+        this.name = name;
+        this.locked = true;
     }
 
     public Island(Island island) {

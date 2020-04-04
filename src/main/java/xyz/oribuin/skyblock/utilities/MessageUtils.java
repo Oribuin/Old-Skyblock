@@ -1,4 +1,4 @@
-package xyz.oribuin.skyblock.managers.island;
+package xyz.oribuin.skyblock.utilities;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,25 +35,12 @@ public class MessageUtils {
             case "invalidPlayer":
                 return Color.msg(getConfig().getString("invalidPlayer").replaceAll("%player%", player.getName()));
             case "hasIsland":
-                //return Color.msg(getConfig().getString("hasIsland").replaceAll("%player%", punished.getName()));
+                //return Color.msg(getConfig().getString("hasIsland").replaceAll("%player%", player.getName()));
                 return Color.msg("&%player% already has an island.").replaceAll("%player%", player.getName());
-            case "alreadyBanned":
-                return Color.msg(getConfig().getString("already-banned").replaceAll("%player%", player.getName()));
+
         }
 
         return msgTile;
-    }
-
-    public String getFormat(String type) {
-        String result;
-
-        if (type.equalsIgnoreCase("ban")) {
-            result = Color.msg(getConfig().getString("formats.banned"));
-        } else {
-            result = Color.msg(getConfig().getString("formats.default"));
-        }
-
-        return result;
     }
 
     public String getUsage(String command) {
