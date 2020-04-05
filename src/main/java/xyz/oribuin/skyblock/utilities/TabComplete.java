@@ -22,10 +22,15 @@ public class TabComplete implements TabCompleter {
         List<String> commands = new ArrayList<>();
         List<String> completions = new ArrayList<>();
 
-        if (sender.hasPermission("skyblock.island.create"))
-            completions.add("create");
-        if (sender.hasPermission("skyblock.admin.reload"))
-            completions.add("reload");
+        if (args.length == 1) {
+            if (sender.hasPermission("skyblock.island.create")) {
+                completions.add("create");
+                if (args[0].equalsIgnoreCase("create"))
+                    completions.add("<name>");
+            }
+            if (sender.hasPermission("skyblock.admin.reload"))
+                completions.add("reload");
+        }
 
         return completions;
     }
