@@ -39,6 +39,8 @@ public class Skyblock extends JavaPlugin {
 
         createWorld("islands_normal", World.Environment.NORMAL);
         createWorld("islands_nether", World.Environment.NETHER);
+
+
     }
 
     private void createFile(String fileName) {
