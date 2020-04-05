@@ -3,6 +3,7 @@ package xyz.oribuin.skyblock.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.data.type.Piston;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -38,6 +39,7 @@ public class CmdIsland implements CommandExecutor {
             return true;
         }
         return true;
+
     }
 
     public void sendHelp(CommandSender sender) {

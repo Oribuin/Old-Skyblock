@@ -15,13 +15,11 @@ public final class Island {
     private UUID owner;
     private int islandRange;
     private Location spawnPoint;
-    private final World world;
 
     public Island(String name, Location location, UUID owner, int islandRange) {
         this.name = name;
         this.owner = owner;
         this.islandRange = islandRange;
-        this.world = Bukkit.getWorld("islands_normal");
         this.center = location;
         this.spawnPoint = center;
         this.locked = false;
@@ -43,10 +41,6 @@ public final class Island {
         return this.owner;
     }
 
-    public World getWorld() {
-        return this.world;
-    }
-
     public Location getCenter() {
         return this.center;
     }
@@ -65,6 +59,6 @@ public final class Island {
  * • Define size, players, upgrades, flags, everything.
  *
  * • This way you can use the methods across the plugin.
- * Jesus christ get yourself together
  *
+ * Jesus christ get yourself together
  */
