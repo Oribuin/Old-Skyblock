@@ -34,6 +34,7 @@ public class Skyblock extends JavaPlugin {
         getCommand("island").setTabCompleter(new TabComplete(this));
 
         createFile("messages.yml");
+
         createFolder("schematics");
 
         createWorld("islands_normal", World.Environment.NORMAL);
