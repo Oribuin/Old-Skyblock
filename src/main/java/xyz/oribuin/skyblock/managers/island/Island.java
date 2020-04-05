@@ -10,11 +10,11 @@ public final class Island {
     // Try not to write trash here
 
     private final Location center;
-    private final boolean locked;
-    private final String name;
-    private final UUID owner;
-    private final int islandRange;
-    private final Location spawnPoint;
+    private boolean locked;
+    private String name;
+    private UUID owner;
+    private int islandRange;
+    private Location spawnPoint;
     private final World world;
 
     public Island(String name, Location location, UUID owner, int islandRange) {

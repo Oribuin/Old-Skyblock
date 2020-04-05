@@ -32,8 +32,6 @@ public class CmdIsland implements CommandExecutor {
 
         if (args.length >= 2 && args[0].equalsIgnoreCase("create") && sender instanceof Player) {
             Player player = (Player) sender;
-
-
             new IslandManager().createIsland(args[1], new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0), player.getUniqueId(), 100);
             player.sendMessage(Color.msg("&aCreated island: &b" + args[1]));
             player.teleport(new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0));
