@@ -6,12 +6,16 @@ import dev.esophose.guiframework.gui.GuiButton;
 import dev.esophose.guiframework.gui.GuiContainer;
 import dev.esophose.guiframework.gui.GuiSize;
 import dev.esophose.guiframework.gui.screen.GuiScreen;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.oribuin.skyblock.Skyblock;
+import xyz.oribuin.skyblock.managers.island.IslandManager;
+import xyz.oribuin.skyblock.utilities.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +33,16 @@ public class MenuIslandCreation {
         this.player = player;
     }
 
-    public void openFor() {
+    public void openFor(String island) {
         if (this.isInvalid())
-            buildGui();
+            buildGui(island);
         this.guiContainer.openFor(player);
     }
 
-    public void buildGui() {
+    public void buildGui(String island) {
         this.guiContainer = new GuiContainer();
+        IslandManager islandManager = new IslandManager();
+        Location islandLocation = new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0);
 
         List<Integer> borderSlots = new ArrayList<>();
         for (int i = 0; i <= 8; i++) borderSlots.add(i);
@@ -59,62 +65,113 @@ public class MenuIslandCreation {
         for (int slot : borderSlots)
             mainScreen.addItemStackAt(slot, borderItem);
 
+        mainScreen.addButtonAt(4, new GuiButton()
+                .setIcon(Material.PAPER)
+                .setName("&bSelect Your Island")
+                .setLore(" ", " &f» &bSelect your island", " &f» &btheme which suits you!")
+                .setGlowing(true)
+                .setClickAction(event -> ClickAction.NOTHING));
 
         mainScreen.addButtonAt(10, new GuiButton()
                 .setIcon(Material.GRASS_BLOCK)
                 .setName("&bBasic Island")
                 .setLore(" ", " &f» &bClassic Skyblock Island", " &f» &bPerfect Starting Island!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "island", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
         mainScreen.addButtonAt(11, new GuiButton()
                 .setIcon(Material.CACTUS)
                 .setName("&bDesert Island")
                 .setLore(" ", " &f» &bDesert Themed Island", " &f» &bPerfect for any sand lovers!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "desert", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
         mainScreen.addButtonAt(12, new GuiButton()
                 .setIcon(Material.ICE)
                 .setName("&bIce Island")
                 .setLore(" ", " &f» &bIce Themed Island", " &f» &bPerfect for winter lovers!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "ice", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
         mainScreen.addButtonAt(13, new GuiButton()
                 .setIcon(Material.DEAD_BUSH)
                 .setName("&bMesa Island")
                 .setLore(" ", " &f» &bMesa Themed Island", " &f» &bPerfect for pottery!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "mesa", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
         mainScreen.addButtonAt(14, new GuiButton()
                 .setIcon(Material.RED_MUSHROOM_BLOCK)
                 .setName("&bMushroom Island")
                 .setLore(" ", " &f» &bMushroom Themed Island", " &f» &bPerfect for soup lovers!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "mushroom", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
         mainScreen.addButtonAt(15, new GuiButton()
                 .setIcon(Material.LAVA_BUCKET)
                 .setName("&bNether Island")
                 .setLore(" ", " &f» &bNether Themed Island", " &f» &bPerfect for hotties:tm:")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
 
-        mainScreen.addButtonAt(10, new GuiButton()
-                .setIcon(Material.GRASS_BLOCK)
-                .setName("&bBasic Island")
-                .setLore(" ", " &f» &bClassic Skyblock Island", " &f» &bPerfect Starting Island")
-                .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                    islandManager.createIsland(island, "nether", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
 
-        mainScreen.addButtonAt(10, new GuiButton()
-                .setIcon(Material.GRASS_BLOCK)
-                .setName("&bBasic Island")
-                .setLore(" ", " &f» &bClassic Skyblock Island", " &f» &bPerfect Starting Island")
+        mainScreen.addButtonAt(16, new GuiButton()
+                .setIcon(Material.BLUE_ORCHID)
+                .setName("&bPlains Island")
+                .setLore(" ", " &f» &bPlains Themed Island", " &f» &bPerfect nautral feel!")
                 .setGlowing(true)
-                .setClickAction(event -> ClickAction.NOTHING));
+                .setClickAction(event -> {
+                    Player player = (Player) event.getWhoClicked();
+
+                    islandManager.createIsland(island, "plains", islandLocation, player.getUniqueId(), 100);
+                    player.teleport(islandLocation);
+                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    return ClickAction.CLOSE;
+                }));
+
+        guiContainer.addScreen(mainScreen);
+        this.guiFramework.getGuiManager().registerGui(guiContainer);
     }
 
     public boolean isInvalid() {

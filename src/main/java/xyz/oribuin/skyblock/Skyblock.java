@@ -32,7 +32,7 @@ public class Skyblock extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        getCommand("island").setExecutor(new CmdIsland(this));
+        getCommand("island").setExecutor(new CmdIsland());
         getCommand("island").setTabCompleter(new TabComplete(this));
 
         createFile("messages.yml");

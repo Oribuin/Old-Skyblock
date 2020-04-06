@@ -13,7 +13,6 @@ import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import xyz.oribuin.skyblock.Skyblock;
 
@@ -29,7 +28,7 @@ public class IslandManager {
         World world = island.getCenter().getWorld();
         if (world == null) return;
 
-        world.getBlockAt(location).setType(Material.BEDROCK);
+
         File file = new File(Skyblock.getInstance().getDataFolder(), "/schematics/" + schematic + ".schematic");
 
         ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(file);

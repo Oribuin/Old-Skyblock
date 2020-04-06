@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import xyz.oribuin.skyblock.Skyblock;
 
-import javax.crypto.SecretKey;
 import java.util.ArrayList;
 import java.util.List;
 

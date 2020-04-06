@@ -14,7 +14,6 @@ import java.util.Random;
 public class ChunkGeneratorWorld extends ChunkGenerator {
 
     private final Skyblock plugin;
-    private final Random random = new Random();
 
     public ChunkGeneratorWorld(Skyblock plugin) {
         super();

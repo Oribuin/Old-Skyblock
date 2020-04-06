@@ -5,7 +5,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import xyz.oribuin.skyblock.Skyblock;
-import xyz.oribuin.skyblock.utilities.Color;
 
 import java.io.File;
 
