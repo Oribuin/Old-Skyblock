@@ -24,13 +24,13 @@ import java.util.UUID;
 
 public class IslandManager {
 
-    public void createIsland(String name, Location location, UUID owner, int islandRange) {
+    public void createIsland(String name, String schematic, Location location, UUID owner, int islandRange) {
         Island island = new Island(name, location, owner, islandRange);
         World world = island.getCenter().getWorld();
         if (world == null) return;
 
         world.getBlockAt(location).setType(Material.BEDROCK);
-        File file = new File(Skyblock.getInstance().getDataFolder(), "/schematics/island.schematic");
+        File file = new File(Skyblock.getInstance().getDataFolder(), "/schematics/" + schematic + ".schematic");
 
         ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(file);
         try (ClipboardReader reader = clipboardFormat.getReader(new FileInputStream(file))) {

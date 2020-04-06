@@ -2,15 +2,11 @@ package xyz.oribuin.skyblock.commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.data.type.Piston;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import xyz.oribuin.skyblock.Skyblock;
-import xyz.oribuin.skyblock.managers.island.Island;
 import xyz.oribuin.skyblock.managers.island.IslandManager;
 import xyz.oribuin.skyblock.utilities.Color;
 
@@ -33,7 +29,7 @@ public class CmdIsland implements CommandExecutor {
 
         if (args.length >= 2 && args[0].equalsIgnoreCase("create") && sender instanceof Player) {
             Player player = (Player) sender;
-            new IslandManager().createIsland(args[1], new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0), player.getUniqueId(), 100);
+            new IslandManager().createIsland(args[1], "island", new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0), player.getUniqueId(), 100);
             player.sendMessage(Color.msg("&aCreated island: &b" + args[1]));
             player.teleport(new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0));
             return true;

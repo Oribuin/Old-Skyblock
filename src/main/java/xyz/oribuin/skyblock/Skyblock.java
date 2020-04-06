@@ -1,5 +1,6 @@
 package xyz.oribuin.skyblock;
 
+import dev.esophose.guiframework.GuiFramework;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -27,6 +28,7 @@ public class Skyblock extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        GuiFramework guiFramework = GuiFramework.instantiate(this);
 
         this.saveDefaultConfig();
 
@@ -34,9 +36,7 @@ public class Skyblock extends JavaPlugin {
         getCommand("island").setTabCompleter(new TabComplete(this));
 
         createFile("messages.yml");
-
         createFolder("schematics");
-
         createWorld("islands_normal", World.Environment.NORMAL);
         createWorld("islands_nether", World.Environment.NETHER);
 
