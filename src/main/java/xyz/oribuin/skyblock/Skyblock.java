@@ -6,9 +6,10 @@ import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.oribuin.skyblock.commands.CmdIsland;
 import xyz.oribuin.skyblock.generators.ChunkGeneratorWorld;
-import xyz.oribuin.skyblock.utilities.TabComplete;
+import xyz.oribuin.skyblock.managers.CommandManager;
+import xyz.oribuin.skyblock.managers.ConfigManager;
+import xyz.oribuin.skyblock.managers.MessageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,39 +20,28 @@ import java.nio.file.Paths;
 public class Skyblock extends JavaPlugin {
 
     private static Skyblock instance;
-    private ChunkGeneratorWorld chunkGenerator = new ChunkGeneratorWorld(this);
+    private ChunkGeneratorWorld chunkGenerator = new ChunkGeneratorWorld();
 
     public static Skyblock getInstance() {
         return instance;
     }
 
+    private CommandManager commandManager;
+    private ConfigManager configManager;
+    private MessageManager messageManager;
+
     @Override
     public void onEnable() {
         instance = this;
-        GuiFramework guiFramework = GuiFramework.instantiate(this);
+        this.commandManager = new CommandManager(this);
+        this.configManager = new ConfigManager(this);
+        this.messageManager = new MessageManager(this);
 
         this.saveDefaultConfig();
 
-        getCommand("island").setExecutor(new CmdIsland());
-        getCommand("island").setTabCompleter(new TabComplete(this));
-
-        createFile("messages.yml");
         createFolder("schematics");
         createWorld("islands_normal", World.Environment.NORMAL);
         createWorld("islands_nether", World.Environment.NETHER);
-
-
-    }
-
-    private void createFile(String fileName) {
-        File file = new File(this.getDataFolder(), fileName);
-        if (!file.exists()) {
-            try (InputStream inStream = this.getResource(fileName)) {
-                Files.copy(inStream, Paths.get(file.getAbsolutePath()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void createFolder(String folderName) {
@@ -59,7 +49,6 @@ public class Skyblock extends JavaPlugin {
         if (!file.exists())
             file.mkdir();
     }
-
 
     private void createWorld(String worldName, World.Environment environment) {
         this.getWorld(worldName.toLowerCase(), environment, chunkGenerator);
@@ -74,10 +63,10 @@ public class Skyblock extends JavaPlugin {
 
         World world = worldCreator.generator(chunkGeneratorWorld).createWorld();
         if (world != null) {
-            world.setMonsterSpawnLimit(getConfig().getInt("item-settings.limits.monster"));
-            world.setAmbientSpawnLimit(getConfig().getInt("item-settings.limits.ambient"));
-            world.setAnimalSpawnLimit(getConfig().getInt("item-settings.limits.animal"));
-            world.setWaterAnimalSpawnLimit(getConfig().getInt("item-settings.limits.water"));
+            world.setMonsterSpawnLimit(100);
+            world.setAmbientSpawnLimit(100);
+            world.setAnimalSpawnLimit(100);
+            world.setWaterAnimalSpawnLimit(100);
         }
         return world;
     }
@@ -85,4 +74,23 @@ public class Skyblock extends JavaPlugin {
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
         return chunkGenerator;
     }
+
+    public void reload() {
+        this.commandManager.reload();
+        this.configManager.reload();
+        this.messageManager.reload();
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
+    }
+
+    public ConfigManager getConfigManager() {
+        return this.configManager;
+    }
+
+    public MessageManager getMessageManager() {
+        return this.messageManager;
+    }
+
 }

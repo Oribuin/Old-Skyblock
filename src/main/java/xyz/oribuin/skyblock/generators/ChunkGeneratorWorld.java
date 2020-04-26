@@ -12,19 +12,15 @@ import java.util.List;
 import java.util.Random;
 
 public class ChunkGeneratorWorld extends ChunkGenerator {
-
-    private final Skyblock plugin;
-
-    public ChunkGeneratorWorld(Skyblock plugin) {
+    public ChunkGeneratorWorld() {
         super();
-        this.plugin = plugin;
     }
 
     public ChunkData generateChunks(World world) {
         ChunkData result = createChunkData(world);
 
-        if (world.getEnvironment().equals(World.Environment.NORMAL) && plugin.getConfig().getInt("island-settings.sea-level") > 0)
-            result.setRegion(0, 0, 0, 16, plugin.getConfig().getInt("island-settings.sea-level") + 1, 16, Material.WATER);
+        if (world.getEnvironment().equals(World.Environment.NORMAL))
+            result.setRegion(0, 0, 0, 16, 1, 16, Material.WATER);
 
         return result;
     }
@@ -33,8 +29,8 @@ public class ChunkGeneratorWorld extends ChunkGenerator {
     public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biomeGrid) {
         ChunkData result = createChunkData(world);
 
-        if (world.getEnvironment().equals(World.Environment.NORMAL) && plugin.getConfig().getInt("island-settings.sea-level") > 0) {
-            result.setRegion(0, 0, 0, 16, plugin.getConfig().getInt("island-settings.sea-level") + 1, 16, Material.WATER);
+        if (world.getEnvironment().equals(World.Environment.NORMAL)) {
+            result.setRegion(0, 0, 0, 16, 1, 16, Material.WATER);
             setBiome(biomeGrid);
         }
 

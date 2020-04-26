@@ -12,9 +12,11 @@ import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import xyz.oribuin.skyblock.Skyblock;
+import xyz.oribuin.skyblock.events.api.IslandCreateEvent;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,6 +34,8 @@ public class IslandManager {
         File file = new File(Skyblock.getInstance().getDataFolder(), "/schematics/" + schematic + ".schematic");
 
         ClipboardFormat clipboardFormat = ClipboardFormats.findByFile(file);
+
+        Bukkit.getPluginManager().callEvent(new IslandCreateEvent(island));
         try (ClipboardReader reader = clipboardFormat.getReader(new FileInputStream(file))) {
             Clipboard clipboard = reader.read();
 

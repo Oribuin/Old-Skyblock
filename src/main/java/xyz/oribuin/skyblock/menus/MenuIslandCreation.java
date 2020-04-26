@@ -1,5 +1,6 @@
 package xyz.oribuin.skyblock.menus;
 
+import dev.esophose.guiframework.GuiFactory;
 import dev.esophose.guiframework.GuiFramework;
 import dev.esophose.guiframework.gui.ClickAction;
 import dev.esophose.guiframework.gui.GuiButton;
@@ -7,6 +8,7 @@ import dev.esophose.guiframework.gui.GuiContainer;
 import dev.esophose.guiframework.gui.GuiSize;
 import dev.esophose.guiframework.gui.screen.GuiScreen;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.oribuin.skyblock.Skyblock;
 import xyz.oribuin.skyblock.managers.island.IslandManager;
-import xyz.oribuin.skyblock.utilities.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class MenuIslandCreation {
     }
 
     public void buildGui(String island) {
-        this.guiContainer = new GuiContainer();
+        this.guiContainer = GuiFactory.createContainer();
         IslandManager islandManager = new IslandManager();
         Location islandLocation = new Location(Bukkit.getWorld("islands_normal"), 0, 72, 0);
 
@@ -50,9 +51,7 @@ public class MenuIslandCreation {
         borderSlots.add(9);
         borderSlots.add(17);
 
-        GuiScreen mainScreen = new GuiScreen(this.guiContainer, GuiSize.ROWS_THREE)
-                .setTitle("Select your island");
-
+        GuiScreen mainScreen = GuiFactory.createScreen(this.guiContainer, GuiSize.ROWS_THREE).setTitle("Select your island");
 
         ItemStack borderItem = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
         ItemMeta borderMeta = borderItem.getItemMeta();
@@ -65,14 +64,14 @@ public class MenuIslandCreation {
         for (int slot : borderSlots)
             mainScreen.addItemStackAt(slot, borderItem);
 
-        mainScreen.addButtonAt(4, new GuiButton()
+        mainScreen.addButtonAt(4, GuiFactory.createButton()
                 .setIcon(Material.PAPER)
                 .setName("&bSelect Your Island")
                 .setLore(" ", " &f» &bSelect your island", " &f» &btheme which suits you!")
                 .setGlowing(true)
                 .setClickAction(event -> ClickAction.NOTHING));
 
-        mainScreen.addButtonAt(10, new GuiButton()
+        mainScreen.addButtonAt(10, GuiFactory.createButton()
                 .setIcon(Material.GRASS_BLOCK)
                 .setName("&bBasic Island")
                 .setLore(" ", " &f» &bClassic Skyblock Island", " &f» &bPerfect Starting Island!")
@@ -82,11 +81,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "island", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(11, new GuiButton()
+        mainScreen.addButtonAt(11, GuiFactory.createButton()
                 .setIcon(Material.CACTUS)
                 .setName("&bDesert Island")
                 .setLore(" ", " &f» &bDesert Themed Island", " &f» &bPerfect for any sand lovers!")
@@ -96,11 +95,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "desert", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(12, new GuiButton()
+        mainScreen.addButtonAt(12, GuiFactory.createButton()
                 .setIcon(Material.ICE)
                 .setName("&bIce Island")
                 .setLore(" ", " &f» &bIce Themed Island", " &f» &bPerfect for winter lovers!")
@@ -110,11 +109,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "ice", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(13, new GuiButton()
+        mainScreen.addButtonAt(13, GuiFactory.createButton()
                 .setIcon(Material.DEAD_BUSH)
                 .setName("&bMesa Island")
                 .setLore(" ", " &f» &bMesa Themed Island", " &f» &bPerfect for pottery!")
@@ -124,11 +123,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "mesa", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(14, new GuiButton()
+        mainScreen.addButtonAt(14, GuiFactory.createButton()
                 .setIcon(Material.RED_MUSHROOM_BLOCK)
                 .setName("&bMushroom Island")
                 .setLore(" ", " &f» &bMushroom Themed Island", " &f» &bPerfect for soup lovers!")
@@ -138,11 +137,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "mushroom", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(15, new GuiButton()
+        mainScreen.addButtonAt(15, GuiFactory.createButton()
                 .setIcon(Material.LAVA_BUCKET)
                 .setName("&bNether Island")
                 .setLore(" ", " &f» &bNether Themed Island", " &f» &bPerfect for hotties:tm:")
@@ -152,11 +151,11 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "nether", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
-        mainScreen.addButtonAt(16, new GuiButton()
+        mainScreen.addButtonAt(16, GuiFactory.createButton()
                 .setIcon(Material.BLUE_ORCHID)
                 .setName("&bPlains Island")
                 .setLore(" ", " &f» &bPlains Themed Island", " &f» &bPerfect nautral feel!")
@@ -166,7 +165,7 @@ public class MenuIslandCreation {
 
                     islandManager.createIsland(island, "plains", islandLocation, player.getUniqueId(), 100);
                     player.teleport(islandLocation);
-                    player.sendMessage(Color.msg("&aYou have created an island!"));
+                    player.sendMessage(color("&aYou have created an island!"));
                     return ClickAction.CLOSE;
                 }));
 
@@ -176,5 +175,9 @@ public class MenuIslandCreation {
 
     public boolean isInvalid() {
         return this.guiContainer == null || !this.guiFramework.getGuiManager().getActiveGuis().contains(this.guiContainer);
+    }
+
+    private String color(String msg) {
+        return ChatColor.translateAlternateColorCodes('&', msg);
     }
 }
