@@ -32,6 +32,7 @@ public class IslandManager extends Manager {
         Island island = new Island(name, location, owner, islandRange);
 
         this.createSchematic(island, schematicName);
+        plugin.getDataManager().createIslandData(island);
         return island;
     }
 

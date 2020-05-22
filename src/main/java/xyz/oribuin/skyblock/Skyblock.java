@@ -39,18 +39,12 @@ public class Skyblock extends JavaPlugin {
         this.reload();
     }
 
-    private void createFolder(String folderName) {
-        File file = new File(this.getDataFolder(), folderName);
-        if (!file.exists())
-            file.mkdir();
-    }
-
     public void reload() {
         this.commandManager.reload();
         this.configManager.reload();
+        this.dataManager.reload();
         this.messageManager.reload();
         this.worldManager.reload();
-        this.dataManager.reload();
     }
 
     public CommandManager getCommandManager() {
@@ -59,6 +53,10 @@ public class Skyblock extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return this.configManager;
+    }
+
+    public DataManager getDataManager() {
+        return this.dataManager;
     }
 
     public MessageManager getMessageManager() {

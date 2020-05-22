@@ -68,6 +68,8 @@ public class CommandManager extends Manager implements TabExecutor {
                     if (sender instanceof Player)
                         onIslandCreateCommand((Player) sender, "test");
                     break;
+
+
             }
         }
         return true;

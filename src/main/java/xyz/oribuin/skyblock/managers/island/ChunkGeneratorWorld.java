@@ -19,7 +19,7 @@ public class ChunkGeneratorWorld extends ChunkGenerator {
         ChunkData result = createChunkData(world);
 
         if (world.getEnvironment().equals(World.Environment.NORMAL))
-            result.setRegion(0, 0, 0, 16, 1, 16, Material.WATER);
+            result.setRegion(0, 0, 0, 16, 1, 16, Material.AIR);
 
         return result;
     }
@@ -29,7 +29,7 @@ public class ChunkGeneratorWorld extends ChunkGenerator {
         ChunkData result = createChunkData(world);
 
         if (world.getEnvironment().equals(World.Environment.NORMAL)) {
-            result.setRegion(0, 0, 0, 16, 1, 16, Material.WATER);
+            result.setRegion(0, 0, 0, 16, 1, 16, Material.AIR);
             setBiome(biomeGrid);
         }
 

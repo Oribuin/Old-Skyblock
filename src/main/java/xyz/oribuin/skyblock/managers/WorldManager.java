@@ -19,7 +19,7 @@ public class WorldManager extends Manager {
         if (this.getWorld(ConfigManager.Setting.WORLD_NAME.getString()) == null)
             this.createWorld(ConfigManager.Setting.WORLD_NAME.getString());
 
-        FileUtils.createFile(plugin, "schematics");
+        FileUtils.createFolder(plugin, "schematics");
     }
 
 
