@@ -1,38 +1,43 @@
 package xyz.oribuin.skyblock.managers;
 
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.command.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.StringUtil;
 import xyz.oribuin.skyblock.Skyblock;
+import xyz.oribuin.skyblock.managers.island.Island;
 import xyz.oribuin.skyblock.managers.island.IslandManager;
-import xyz.oribuin.skyblock.menus.MenuIslandCreation;
 import xyz.oribuin.skyblock.utils.StringPlaceholders;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CommandManager extends Manager implements TabExecutor {
 
     public CommandManager(Skyblock plugin) {
         super(plugin);
 
-        PluginCommand trailsCommand = this.plugin.getCommand("island");
-        if (trailsCommand != null) {
-            trailsCommand.setExecutor(this);
-            trailsCommand.setTabCompleter(this);
+        PluginCommand islandCommand = this.plugin.getCommand("island");
+        if (islandCommand != null) {
+            islandCommand.setExecutor(this);
+            islandCommand.setTabCompleter(this);
         }
     }
 
     @Override
     public void reload() {
         // Unused
+    }
+
+    public void onIslandCreateCommand(Player sender, String name) {
+        IslandManager islandManager = new IslandManager(plugin);
+        Island island = islandManager.createIsland(name, "island", new Location(Bukkit.getWorld(ConfigManager.Setting.WORLD_NAME.getString()), 0, 50, 0), sender.getUniqueId(), 100);
+
+        sender.teleport(island.getSpawnPoint());
     }
 
     public void onReloadCommand(CommandSender sender) {
@@ -56,23 +61,15 @@ public class CommandManager extends Manager implements TabExecutor {
         MessageManager messageManager = this.plugin.getMessageManager();
 
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                onReloadCommand(sender);
-            }
-        } else if (args.length >= 2) {
-            if (args[0].equalsIgnoreCase("create")) {
-                if (!(sender instanceof Player)) {
-                    messageManager.sendMessage(sender, "player-only");
-                    return true;
-                }
 
-                if (!sender.hasPermission("skyblock.island.create")) {
-                    messageManager.sendMessage(sender, "invalid-permission");
-                    return true;
-                }
-
-                Player player = (Player) sender;
-                new MenuIslandCreation(player).openFor(args[1]);
+            switch (args[0].toLowerCase()) {
+                case "reload":
+                    onReloadCommand(sender);
+                    break;
+                case "create":
+                    if (sender instanceof Player)
+                        onIslandCreateCommand((Player) sender, "test");
+                    break;
             }
         }
         return true;

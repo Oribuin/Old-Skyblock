@@ -1,11 +1,10 @@
-package xyz.oribuin.skyblock.generators;
+package xyz.oribuin.skyblock.managers.island;
 
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
-import xyz.oribuin.skyblock.Skyblock;
 
 import java.util.Collections;
 import java.util.List;

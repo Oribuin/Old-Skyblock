@@ -13,7 +13,9 @@ public class ConfigManager extends Manager {
     }
 
     public enum Setting {
-        USE_MESSAGES("messages-enabled");
+        WORLD_NAME("world-name"),
+
+        ISLAND_SETTINGS_SIZE("island-settings.size");
 
         private final String key;
         private Object value = null;
@@ -102,8 +104,11 @@ public class ConfigManager extends Manager {
         this.plugin.reloadConfig();
         this.plugin.saveDefaultConfig();
 
+
         FileConfiguration config = this.plugin.getConfig();
-        for (Setting value : Setting.values())
+        for (Setting value : Setting.values()) {
+            config.addDefault(value.key, value);
             value.load(config);
+        }
     }
 }

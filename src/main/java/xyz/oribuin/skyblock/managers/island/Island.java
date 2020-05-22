@@ -1,8 +1,6 @@
 package xyz.oribuin.skyblock.managers.island;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import xyz.oribuin.skyblock.events.api.OwnerChangeEvent;
 
 import java.util.UUID;
 
@@ -27,34 +25,16 @@ public final class Island {
         return this.islandRange;
     }
 
-    public void setIslandRange(int islandRange) {
-        this.islandRange = islandRange;
-    }
-
     public boolean isLocked() {
         return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
     }
 
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public UUID getOwner() {
         return this.owner;
-    }
-
-    public void setOwner(UUID uuid) {
-        OwnerChangeEvent ownerChangeEvent = new OwnerChangeEvent(owner, uuid);
-        Bukkit.getPluginManager().callEvent(ownerChangeEvent);
-        ownerChangeEvent.setOwner(uuid);
     }
 
     public Location getCenter() {
@@ -63,10 +43,6 @@ public final class Island {
 
     public Location getSpawnPoint() {
         return this.spawnPoint;
-    }
-
-    public void setSpawnPoint(Location spawnPoint) {
-        this.spawnPoint = spawnPoint;
     }
 }
 

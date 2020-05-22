@@ -3,4 +3,7 @@
 #
 # https://github.com/Oribuin/Skyblock/
 
-messages-enabled: true
+world-name: 'islands'
+
+island-settings:
+  size: 100

@@ -21,16 +21,19 @@ repositories {
 }
 
 dependencies {
+    
     shadow 'org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.10.5'
+    compileOnly 'me.clip:placeholderapi:2.10.6'
     implementation 'dev.esophose:guiframework:1.1.0'
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
+    
+    // Implement SQLite
+
 
 }
 
 shadowJar {
     mergeServiceFiles()
-    minimize()
     relocate('dev.esophose.guiframework', 'xyz.oribuin.skyblock.libs.guiframework')
     archiveName 'Skyblock-' + project.property("version") + ".jar"
 }
