@@ -45,15 +45,3 @@ public final class Island {
         return this.spawnPoint;
     }
 }
-
-/*
- * Here is just for me because I have gotten confused many times
- *
- * • You're defining the island methods
- * • So getRange() getMembers() ect
- * • Define size, players, upgrades, flags, everything.
- *
- * • This way you can use the methods across the plugin.
- *
- * Jesus christ get yourself together
- */

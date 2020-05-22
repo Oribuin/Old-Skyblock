@@ -5,6 +5,8 @@ author: Oribuin
 api-version: "1.13"
 description: All skyblock plugins suck so i made my own kekW
 website: https://oribuin.xyz/
+depend:
+  - WorldEdit
 softdepend:
   - PlaceholderAPI
 loadbefore:

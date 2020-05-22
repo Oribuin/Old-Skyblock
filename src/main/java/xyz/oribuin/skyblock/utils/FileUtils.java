@@ -25,4 +25,11 @@ public final class FileUtils {
             }
         }
     }
+
+    public static void createFolder(Plugin plugin, String folderName) {
+        File file = new File(plugin.getDataFolder(), folderName);
+
+        if (!file.getParentFile().exists())
+            file.mkdir();
+    }
 }

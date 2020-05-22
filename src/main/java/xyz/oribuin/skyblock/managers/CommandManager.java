@@ -58,8 +58,6 @@ public class CommandManager extends Manager implements TabExecutor {
         if (!command.getName().equalsIgnoreCase("island"))
             return true;
 
-        MessageManager messageManager = this.plugin.getMessageManager();
-
         if (args.length == 1) {
 
             switch (args[0].toLowerCase()) {

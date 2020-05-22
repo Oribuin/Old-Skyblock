@@ -6,6 +6,7 @@ import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 import xyz.oribuin.skyblock.Skyblock;
 import xyz.oribuin.skyblock.managers.island.ChunkGeneratorWorld;
+import xyz.oribuin.skyblock.utils.FileUtils;
 
 public class WorldManager extends Manager {
 
@@ -15,7 +16,10 @@ public class WorldManager extends Manager {
 
     @Override
     public void reload() {
-        // Unused
+        if (this.getWorld(ConfigManager.Setting.WORLD_NAME.getString()) == null)
+            this.createWorld(ConfigManager.Setting.WORLD_NAME.getString());
+
+        FileUtils.createFile(plugin, "schematics");
     }
 
 

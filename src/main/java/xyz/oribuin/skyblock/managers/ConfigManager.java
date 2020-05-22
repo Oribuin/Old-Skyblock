@@ -104,7 +104,6 @@ public class ConfigManager extends Manager {
         this.plugin.reloadConfig();
         this.plugin.saveDefaultConfig();
 
-
         FileConfiguration config = this.plugin.getConfig();
         for (Setting value : Setting.values()) {
             config.addDefault(value.key, value);

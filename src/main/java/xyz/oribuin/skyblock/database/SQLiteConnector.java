@@ -3,6 +3,7 @@ package xyz.oribuin.skyblock.database;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -18,12 +19,14 @@ public class SQLiteConnector implements DatabaseConnector {
 
     public SQLiteConnector(Plugin plugin) {
         this.plugin = plugin;
-        this.connectionString = "jdbc:sqlite:" + plugin.getDataFolder() + File.separator + plugin.getDescription().getName().toLowerCase() + ".db";
+        File dbFile = new File(plugin.getDataFolder(), plugin.getDescription().getName().toLowerCase() + ".db");
+        this.connectionString = "jdbc:sqlite:" + dbFile.getPath();
 
         try {
-            Class.forName("org.sqlite.JDBC"); // This is required to put here for Spigot 1.10 and below for some reason
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            if (dbFile.exists())
+                dbFile.createNewFile();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 
