@@ -4,9 +4,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.oribuin.skyblock.database.DatabaseConnector;
 import xyz.oribuin.skyblock.database.SQLiteConnector;
 import xyz.oribuin.skyblock.managers.*;
-import xyz.oribuin.skyblock.utils.FileUtils;
-
-import java.io.File;
 
 public class Skyblock extends JavaPlugin {
 
