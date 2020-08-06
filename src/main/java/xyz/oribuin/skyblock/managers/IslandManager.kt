@@ -24,7 +24,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         createSchematic(island, schematicName)
 
         // Create island data
-        plugin.dataManager.createIsland(island)
+        plugin.dataManager.createIslandData(island)
         return island
     }
 
@@ -61,7 +61,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         }
     }
 
-    fun getNextAvailableLocation() : Location {
+    fun getNextAvailableLocation(): Location {
         return Location(Bukkit.getWorld("Islands"), 0.0, 65.0, 0.0)
     }
 }

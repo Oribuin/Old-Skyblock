@@ -10,7 +10,7 @@ class ConfigManager(plugin: Skyblock) : Manager(plugin) {
         val config = plugin.config
 
         for (value in Setting.values()) {
-            config.addDefault(value.key,value.defaultValue)
+            config.addDefault(value.key, value.defaultValue)
             value.load(config)
         }
 

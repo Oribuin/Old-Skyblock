@@ -6,7 +6,6 @@ import xyz.oribuin.skyblock.database.DatabaseConnector
 import xyz.oribuin.skyblock.database.MySQLConnector
 import xyz.oribuin.skyblock.database.SQLiteConnector
 import xyz.oribuin.skyblock.island.Island
-import java.lang.Runnable
 import xyz.oribuin.skyblock.utils.FileUtils.createFile
 import java.sql.Connection
 
@@ -61,7 +60,7 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
         })
     }
 
-    fun createIsland(island: Island) {
+    fun createIslandData(island: Island) {
         async(Runnable {
             connector?.connect { connection: Connection ->
                 val createIslandData = "INSERT INTO ${tablePrefix}islands (uuid, name, locked, center_x, center_y, center_z, range, spawn_x, spawn_y, spawn_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"

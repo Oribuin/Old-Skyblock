@@ -1,8 +1,6 @@
 package xyz.oribuin.skyblock.database
 
-import xyz.oribuin.skyblock.database.DatabaseConnector.ConnectionCallback
 import java.sql.Connection
-import kotlin.jvm.Throws
 import java.sql.SQLException
 
 interface DatabaseConnector {

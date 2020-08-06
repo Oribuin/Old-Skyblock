@@ -5,7 +5,6 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.commands.CmdIsland
 import xyz.oribuin.skyblock.commands.OriCommand
-import xyz.oribuin.skyblock.managers.IslandManager
 import xyz.oribuin.skyblock.managers.*
 
 class Skyblock : JavaPlugin() {
