@@ -1,6 +1,6 @@
-package xyz.oribuin.skyblock.enums;
+package xyz.oribuin.skyblock.enums
 
-public enum SettingsFlag {
+enum class SettingsFlag {
     ANVIL,
     ARMOR_STAND,
     BEACON,

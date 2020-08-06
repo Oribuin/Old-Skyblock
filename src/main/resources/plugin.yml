@@ -2,7 +2,7 @@ name: Skyblock
 main: xyz.oribuin.skyblock.Skyblock
 version: @version@
 author: Oribuin
-api-version: "1.13"
+api-version: "1.16"
 description: All skyblock plugins suck so i made my own kekW
 website: https://oribuin.xyz/
 depend:

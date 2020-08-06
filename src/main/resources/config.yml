@@ -3,7 +3,17 @@
 #
 # https://github.com/Oribuin/Skyblock/
 
-world-name: 'islands'
+world-name: 'Islands'
 
 island-settings:
   size: 100
+
+my-sql:
+  enabled: false
+  hostname: ''
+  port: 3315
+  database-name: ''
+  user-name: ''
+  user-password: ''
+  # Enable if database supports SSL
+  use-ssl: false
