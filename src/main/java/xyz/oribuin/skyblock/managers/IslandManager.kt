@@ -62,6 +62,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     fun getNextAvailableLocation(): Location {
+        // Create something that generates a random location
         return Location(Bukkit.getWorld("Islands"), 0.0, 65.0, 0.0)
     }
 }
