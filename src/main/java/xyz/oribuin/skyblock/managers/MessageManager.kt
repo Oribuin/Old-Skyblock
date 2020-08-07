@@ -26,13 +26,13 @@ class MessageManager(plugin: Skyblock) : Manager(plugin) {
     @JvmOverloads
     fun sendMessage(sender: CommandSender, messageId: String, placeholders: StringPlaceholders = empty()) {
         if (messageConfig.getString(messageId) == null) {
-            sender.spigot().sendMessage(*TextComponent.fromLegacyText(colorify("#ff4072$messageId is null in messages.yml")))
+            sender.sendMessage(colorify("#ff4072$messageId is null in messages.yml"))
             return
         }
 
-        if (messageConfig.getString(messageId)!!.isNotEmpty()) {
+        if (!messageConfig.getString(messageId).isNullOrBlank()) {
             val msg = messageConfig.getString("prefix") + placeholders.apply(messageConfig.getString(messageId)!!)
-            sender.spigot().sendMessage(*TextComponent.fromLegacyText(colorify(parsePlaceholders(sender, msg))))
+            sender.sendMessage(colorify(parsePlaceholders(sender, msg)))
         }
     }
 
