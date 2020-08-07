@@ -17,24 +17,20 @@ import java.io.IOException
 import java.util.*
 
 class IslandManager(plugin: Skyblock) : Manager(plugin) {
-
-    fun createIsland(name: String, schematicName: String, location: Location, owner: UUID, islandRange: Int): Island {
-        val island = Island(name, location, owner, islandRange)
-
-        createSchematic(island, schematicName)
-
-        // Create island data
-        plugin.dataManager.createIslandData(island)
-        return island
-    }
-
-
     override fun reload() {
         // Unused
     }
 
     override fun disable() {
         // Unused
+    }
+
+    fun createIsland(name: String, schematicName: String, location: Location, owner: UUID, islandRange: Int): Island {
+        val island = Island(name, location, owner, islandRange)
+        this.createSchematic(island, schematicName)
+        plugin.getManager(DataManager::class.java).createIslandData(island)
+
+        return island
     }
 
     private fun createSchematic(island: Island, schematicName: String) {
@@ -62,7 +58,6 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     fun getNextAvailableLocation(): Location {
-        // Create something that generates a random location
         return Location(Bukkit.getWorld("Islands"), 0.0, 65.0, 0.0)
     }
 }

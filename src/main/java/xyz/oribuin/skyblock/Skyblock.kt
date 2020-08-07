@@ -9,26 +9,15 @@ import xyz.oribuin.skyblock.managers.*
 
 class Skyblock : JavaPlugin() {
 
-    lateinit var configManager: ConfigManager
-    lateinit var dataManager: DataManager
-    lateinit var hookManager: HookManager
-    lateinit var islandManager: IslandManager
-    lateinit var messageManager: MessageManager
-    lateinit var worldManager: WorldManager
+    // Manager reflection taken from RoseStacker.
+    private lateinit var managers: MutableMap<Class<out Manager>, Manager>
 
     override fun onEnable() {
 
         // Register plugin commands.
         this.registerCommands(CmdIsland(this))
 
-
-        // Register managers
-        this.configManager = ConfigManager(this)
-        this.dataManager = DataManager(this)
-        this.hookManager = HookManager(this)
-        this.islandManager = IslandManager(this)
-        this.messageManager = MessageManager(this)
-        this.worldManager = WorldManager(this)
+        this.managers = LinkedHashMap()
 
 
         this.saveDefaultConfig()
@@ -47,25 +36,32 @@ class Skyblock : JavaPlugin() {
         }
     }
 
+    /**
+     * @author Esophose
+     */
     fun reload() {
-        this.configManager.reload()
-        this.dataManager.reload()
-        this.hookManager.reload()
-        this.islandManager.reload()
-        this.messageManager.reload()
-        this.worldManager.reload()
+        this.disableManagers()
+        this.managers.values.forEach(Manager::reload)
+
+        this.getManager(ConfigManager::class.java)
+        this.getManager(DataManager::class.java)
+        this.getManager(HookManager::class.java)
+        this.getManager(IslandManager::class.java)
+        this.getManager(MessageManager::class.java)
+        this.getManager(WorldManager::class.java)
     }
 
     override fun onDisable() {
-        this.disable()
+        this.disableManagers()
+        this.managers.clear()
     }
 
-    private fun disable() {
-        this.configManager.disable()
-        this.dataManager.disable()
-        this.hookManager.disable()
-        this.islandManager.disable()
-        this.messageManager.disable()
-        this.worldManager.disable()
+    private fun disableManagers() {
+        val managers: List<Manager> = ArrayList(managers.values)
+        managers.forEach { obj: Manager -> obj.disable() }
+    }
+
+    fun <T : Manager> getManager(managerClass: Class<T>): T {
+        return managers[managerClass] as T
     }
 }

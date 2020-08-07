@@ -48,7 +48,7 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     private fun createTables() {
 
         val queries = arrayOf(
-                "CREATE TABLE IF NOT EXISTS ${tablePrefix}islands (uuid TXT, name, TXT, locked BOOLEAN, center_x DOUBLE, center_y, center_z DOUBLE, range INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE)"
+                "CREATE TABLE IF NOT EXISTS ${tablePrefix}islands (owner_uuid TXT, name, TXT, locked BOOLEAN, center_x DOUBLE, center_y, center_z DOUBLE, range INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE)"
         )
 
         async(Runnable {
@@ -63,7 +63,7 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     fun createIslandData(island: Island) {
         async(Runnable {
             connector?.connect { connection: Connection ->
-                val createIslandData = "INSERT INTO ${tablePrefix}islands (uuid, name, locked, center_x, center_y, center_z, range, spawn_x, spawn_y, spawn_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                val createIslandData = "INSERT INTO ${tablePrefix}islands (owner_uuid, name, locked, center_x, center_y, center_z, range, spawn_x, spawn_y, spawn_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 connection.prepareStatement(createIslandData).use { statement ->
                     statement.setString(1, island.owner.toString())
                     statement.setString(2, island.name)

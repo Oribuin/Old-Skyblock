@@ -19,13 +19,9 @@ class WorldManager(plugin: Skyblock) : Manager(plugin) {
         // Unused
     }
 
-    fun getWorld(worldName: String): World? {
-        return Bukkit.getWorld(worldName)
-    }
-
     private fun createWorld(worldName: String) {
 
-        if (getWorld(worldName) == null) {
+        if (Bukkit.getWorld(worldName) == null) {
             val worldCreator = WorldCreator.name(worldName)
                     .type(WorldType.FLAT)
                     .environment(World.Environment.NORMAL)

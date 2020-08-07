@@ -8,6 +8,8 @@ import org.bukkit.util.StringUtil
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.events.IslandCreateEvent
 import xyz.oribuin.skyblock.managers.ConfigManager
+import xyz.oribuin.skyblock.managers.IslandManager
+import xyz.oribuin.skyblock.managers.MessageManager
 import xyz.oribuin.skyblock.utils.StringPlaceholders
 import java.io.File
 import java.util.*
@@ -15,7 +17,7 @@ import java.util.*
 class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
 
     override fun executeCommand(sender: CommandSender, args: Array<String>) {
-        //val msg = this.plugin.messageManager
+        //val msg = this.plugin.getManager(MessageManager::class.java)
 
         if (args.size == 1) {
             if (args[0].toLowerCase() == "reload") {
@@ -34,8 +36,8 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
     }
 
     private fun createIsland(sender: CommandSender, args: Array<String>, schematicName: String) {
-        val msg = this.plugin.messageManager
-        val islandManager = this.plugin.islandManager
+        val msg = this.plugin.getManager(MessageManager::class.java)
+        val islandManager = this.plugin.getManager(IslandManager::class.java)
 
         if (sender !is Player) {
             msg.sendMessage(sender, "player-only")
@@ -57,7 +59,7 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
     }
 
     private fun reload(sender: CommandSender) {
-        val messageManager = plugin.messageManager
+        val messageManager = plugin.getManager(MessageManager::class.java)
 
         if (!sender.hasPermission("skyblock.reload")) {
             messageManager.sendMessage(sender, "invalid-permission")
