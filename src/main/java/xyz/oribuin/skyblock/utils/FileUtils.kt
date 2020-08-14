@@ -19,6 +19,13 @@ object FileUtils {
         if (!file.exists()) {
             try {
                 plugin.getResource(fileName).use { inStream ->
+
+                    if (file.parentFile.exists()) {
+                        file.parentFile.mkdir()
+                    }
+
+
+
                     if (inStream == null) {
                         file.createNewFile()
                         return
@@ -27,6 +34,24 @@ object FileUtils {
                     Files.copy(inStream, Paths.get(file.absolutePath))
                 }
 
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    @JvmStatic
+    fun createFile(plugin: Plugin, file: File) {
+        if (!file.exists()) {
+            try {
+                plugin.getResource(file.name).use { inStream ->
+                    if (inStream == null) {
+                        file.createNewFile()
+                        return
+                    }
+
+                    Files.copy(inStream, Paths.get(file.absolutePath))
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
             }

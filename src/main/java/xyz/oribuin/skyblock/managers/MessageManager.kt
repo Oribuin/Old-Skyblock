@@ -1,6 +1,5 @@
 package xyz.oribuin.skyblock.managers
 
-import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration

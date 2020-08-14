@@ -6,19 +6,17 @@ import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.commands.CmdIsland
 import xyz.oribuin.skyblock.commands.OriCommand
 import xyz.oribuin.skyblock.managers.*
+import kotlin.reflect.KClass
 
 class Skyblock : JavaPlugin() {
 
     // Manager reflection taken from RoseStacker.
-    private lateinit var managers: MutableMap<Class<out Manager>, Manager>
+    private val managers: MutableMap<KClass<out Manager>, Manager> = HashMap()
 
     override fun onEnable() {
 
         // Register plugin commands.
         this.registerCommands(CmdIsland(this))
-
-        this.managers = LinkedHashMap()
-
 
         this.saveDefaultConfig()
         this.reload()
@@ -43,12 +41,12 @@ class Skyblock : JavaPlugin() {
         this.disableManagers()
         this.managers.values.forEach(Manager::reload)
 
-        this.getManager(ConfigManager::class.java)
-        this.getManager(DataManager::class.java)
-        this.getManager(HookManager::class.java)
-        this.getManager(IslandManager::class.java)
-        this.getManager(MessageManager::class.java)
-        this.getManager(WorldManager::class.java)
+        this.getManager(ConfigManager::class)
+        this.getManager(DataManager::class)
+        this.getManager(HookManager::class)
+        this.getManager(IslandManager::class)
+        this.getManager(MessageManager::class)
+        this.getManager(WorldManager::class)
     }
 
     override fun onDisable() {
@@ -57,11 +55,23 @@ class Skyblock : JavaPlugin() {
     }
 
     private fun disableManagers() {
-        val managers: List<Manager> = ArrayList(managers.values)
-        managers.forEach { obj: Manager -> obj.disable() }
+        this.managers.values.forEach(Manager::disable)
     }
 
-    fun <T : Manager> getManager(managerClass: Class<T>): T {
-        return managers[managerClass] as T
+    fun <M : Manager> getManager(managerClass: KClass<M>): M {
+        synchronized(this.managers) {
+            @Suppress("UNCHECKED_CAST")
+            if (this.managers.containsKey(managerClass))
+                return this.managers[managerClass] as M
+
+            return try {
+                val manager = managerClass.constructors.first().call(this)
+                manager.reload()
+                this.managers[managerClass] = manager
+                manager
+            } catch (ex: ReflectiveOperationException) {
+                error("Failed to load manager for ${managerClass.simpleName}")
+            }
+        }
     }
 }

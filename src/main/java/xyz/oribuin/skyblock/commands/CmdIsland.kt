@@ -11,7 +11,6 @@ import xyz.oribuin.skyblock.managers.ConfigManager
 import xyz.oribuin.skyblock.managers.IslandManager
 import xyz.oribuin.skyblock.managers.MessageManager
 import xyz.oribuin.skyblock.utils.StringPlaceholders
-import java.io.File
 import java.util.*
 
 class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
@@ -36,8 +35,8 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
     }
 
     private fun createIsland(sender: CommandSender, args: Array<String>, schematicName: String) {
-        val msg = this.plugin.getManager(MessageManager::class.java)
-        val islandManager = this.plugin.getManager(IslandManager::class.java)
+        val msg = plugin.getManager(MessageManager::class)
+        val islandManager = plugin.getManager(IslandManager::class)
 
         if (sender !is Player) {
             msg.sendMessage(sender, "player-only")
@@ -50,7 +49,7 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
         }
 
         val islandName = java.lang.String.join(" ", *args).substring(args[0].length + 1)
-        val island = islandManager.createIsland(islandName, schematicName, islandManager.getNextAvailableLocation(), sender.uniqueId, ConfigManager.Setting.SETTINGS_SIZE.int)
+        val island = islandManager.createIsland(islandName, schematicName, sender.uniqueId, ConfigManager.Setting.SETTINGS_SIZE.int)
         sender.teleport(island.spawnPoint)
 
         msg.sendMessage(sender, "commands.created-island", StringPlaceholders.builder("island_name", island.name).addPlaceholder("island_type", StringUtils.capitalize(schematicName)).build())
@@ -59,7 +58,7 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
     }
 
     private fun reload(sender: CommandSender) {
-        val messageManager = plugin.getManager(MessageManager::class.java)
+        val messageManager = plugin.getManager(MessageManager::class)
 
         if (!sender.hasPermission("skyblock.reload")) {
             messageManager.sendMessage(sender, "invalid-permission")
@@ -96,7 +95,7 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
             when (args[1].toLowerCase()) {
                 "create" -> {
                     if (sender.hasPermission("skyblock.create")) {
-                        StringUtil.copyPartialMatches(args[1], schemList, suggestions)
+                        StringUtil.copyPartialMatches(args[1], setOf("plains"), suggestions)
                     }
                 }
             }
@@ -106,25 +105,4 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
 
         return suggestions
     }
-
-    private val schemList: List<String>
-        get() {
-            val file = File(plugin.dataFolder, "schematics")
-            val list = mutableListOf<String>()
-
-            if (file.listFiles() == null) {
-                return emptyList()
-            }
-
-
-            file.listFiles().forEach { schemFile ->
-                if (schemFile.name.endsWith(".schem")) {
-                    list.add(file.name.substring(-6))
-                } else if (schemFile.name.endsWith(".schematic")) {
-                    list.add(file.name.substring(-10))
-                }
-            }
-
-            return list
-        }
 }

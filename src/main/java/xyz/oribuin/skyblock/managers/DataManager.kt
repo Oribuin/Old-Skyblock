@@ -10,7 +10,7 @@ import xyz.oribuin.skyblock.utils.FileUtils.createFile
 import java.sql.Connection
 
 class DataManager(plugin: Skyblock) : Manager(plugin) {
-    private var connector: DatabaseConnector? = null
+    var connector: DatabaseConnector? = null
 
     override fun reload() {
         try {
