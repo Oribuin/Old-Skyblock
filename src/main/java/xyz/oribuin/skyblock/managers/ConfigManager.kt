@@ -2,6 +2,7 @@ package xyz.oribuin.skyblock.managers
 
 import org.bukkit.configuration.file.FileConfiguration
 import xyz.oribuin.skyblock.Skyblock
+import java.io.File
 
 class ConfigManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
@@ -10,14 +11,18 @@ class ConfigManager(plugin: Skyblock) : Manager(plugin) {
         val config = plugin.config
 
         for (value in Setting.values()) {
-            config.addDefault(value.key, value.defaultValue)
+            if (config.get(value.key) == null) {
+                config.set(value.key, value.defaultValue)
+            }
             value.load(config)
         }
 
+        config.save(File(plugin.dataFolder, "config.yml"))
     }
 
     enum class Setting(val key: String, val defaultValue: Any) {
         WORLD("world-name", "Islands"),
+        TIME("date-time-format", "HH:mm dd/m/yyyy"),
         SETTINGS_SIZE("island-settings.size", 100),
         SQL_ENABLED("my-sql.enabled", false),
         SQL_HOSTNAME("my-sql.hostname", ""),

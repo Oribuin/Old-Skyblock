@@ -1,11 +1,13 @@
 package xyz.oribuin.skyblock
 
+import me.bristermitten.pdm.PDMBuilder
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.commands.CmdIsland
 import xyz.oribuin.skyblock.commands.OriCommand
 import xyz.oribuin.skyblock.managers.*
+import xyz.oribuin.skyblock.utils.FileUtils
 import kotlin.reflect.KClass
 
 class Skyblock : JavaPlugin() {
@@ -14,12 +16,26 @@ class Skyblock : JavaPlugin() {
     private val managers: MutableMap<KClass<out Manager>, Manager> = HashMap()
 
     override fun onEnable() {
+        PDMBuilder(this).build().loadAllDependencies().join()
+
+        this.getManager(ConfigManager::class)
+        this.getManager(DataManager::class)
+        this.getManager(HookManager::class)
+        this.getManager(IslandManager::class)
+        this.getManager(MessageManager::class)
+        this.getManager(WorldManager::class)
 
         // Register plugin commands.
         this.registerCommands(CmdIsland(this))
 
-        this.saveDefaultConfig()
+        // Register plugin listeners
+        this.registerListeners()
+
         this.reload()
+        this.saveDefaultConfig()
+
+        FileUtils.createDirFile(this, "schematics", "plains.schematic")
+
     }
 
     private fun registerCommands(vararg commands: OriCommand) {
@@ -34,28 +50,18 @@ class Skyblock : JavaPlugin() {
         }
     }
 
-    /**
-     * @author Esophose
-     */
     fun reload() {
         this.disableManagers()
-        this.managers.values.forEach(Manager::reload)
-
-        this.getManager(ConfigManager::class)
-        this.getManager(DataManager::class)
-        this.getManager(HookManager::class)
-        this.getManager(IslandManager::class)
-        this.getManager(MessageManager::class)
-        this.getManager(WorldManager::class)
+        this.server.scheduler.cancelTasks(this)
+        this.managers.values.forEach { manager -> manager.reload() }
     }
 
     override fun onDisable() {
         this.disableManagers()
-        this.managers.clear()
     }
 
     private fun disableManagers() {
-        this.managers.values.forEach(Manager::disable)
+        this.managers.values.forEach { manager -> manager.disable() }
     }
 
     fun <M : Manager> getManager(managerClass: KClass<M>): M {

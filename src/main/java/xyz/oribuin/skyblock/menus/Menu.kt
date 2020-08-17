@@ -7,10 +7,10 @@ import xyz.oribuin.skyblock.utils.FileUtils.createMenuFile
 import java.io.File
 
 abstract class Menu(private val plugin: Skyblock, private val guiName: String) {
-    val menuConfig: FileConfiguration
+    private val menuConfig: FileConfiguration
 
     init {
-        createMenuFile(plugin, menuFile)
+        createMenuFile(plugin, guiName)
         menuConfig = YamlConfiguration.loadConfiguration(menuFile)
     }
 

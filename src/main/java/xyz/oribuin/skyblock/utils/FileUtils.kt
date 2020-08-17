@@ -17,25 +17,53 @@ object FileUtils {
         val file = File(plugin.dataFolder, fileName)
 
         if (!file.exists()) {
-            try {
-                plugin.getResource(fileName).use { inStream ->
-
-                    if (file.parentFile.exists()) {
-                        file.parentFile.mkdir()
-                    }
-
-
-
-                    if (inStream == null) {
-                        file.createNewFile()
-                        return
-                    }
-
-                    Files.copy(inStream, Paths.get(file.absolutePath))
+            plugin.getResource(fileName).use { inStream ->
+                if (inStream == null) {
+                    file.createNewFile()
+                    return
                 }
 
-            } catch (e: IOException) {
-                e.printStackTrace()
+                Files.copy(inStream, Paths.get(file.absolutePath))
+            }
+        }
+    }
+
+    @JvmStatic
+    fun createMenuFile(plugin: Plugin, fileName: String) {
+        val dir = File(plugin.dataFolder, "menus")
+        val file = File(dir, "$fileName.yml")
+
+        if (!dir.exists())
+            dir.mkdirs()
+
+        if (!file.exists()) {
+            plugin.getResource("menus/${fileName}.yml").use { inputStream ->
+                if (inputStream == null) {
+                    file.createNewFile()
+                    return
+                }
+
+                Files.copy(inputStream, Paths.get(file.absolutePath))
+            }
+        }
+    }
+
+    @JvmStatic
+    fun createDirFile(plugin: Plugin, directory: String, fileName: String) {
+        val dir = File(plugin.dataFolder, directory)
+        val file = File(dir, fileName)
+
+        if (!dir.exists())
+            dir.mkdirs()
+
+        if (!file.exists()) {
+            plugin.getResource("$directory/$fileName").use { inputStream ->
+                if (inputStream == null) {
+                    file.createNewFile()
+                    return
+                }
+
+                Files.copy(inputStream, Paths.get(file.absolutePath))
             }
         }
     }
@@ -64,35 +92,6 @@ object FileUtils {
 
         if (!file.exists()) {
             file.mkdir()
-        }
-    }
-
-    /**
-     * Creates a file on disk in menus folder from a file located in the jar
-     *
-     * @param plugin The plugin the file is being created in.
-     * @param file The file name.
-     */
-    @JvmStatic
-    fun createMenuFile(plugin: Plugin, file: File) {
-        if (!file.exists()) {
-            if (!file.parentFile.exists()) {
-                file.parentFile.mkdir()
-            }
-
-            try {
-                plugin.getResource("menus" + File.separator + file.name).use { inputStream ->
-                    if (inputStream == null) {
-                        file.createNewFile()
-                        return
-                    }
-
-                    Files.copy(inputStream, Paths.get(file.absolutePath))
-                }
-
-            } catch (ex: IOException) {
-                ex.printStackTrace()
-            }
         }
     }
 }
