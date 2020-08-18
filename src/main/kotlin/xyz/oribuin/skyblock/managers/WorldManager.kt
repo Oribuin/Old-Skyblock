@@ -11,7 +11,7 @@ import xyz.oribuin.skyblock.utils.FileUtils
 
 class WorldManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
-        ConfigManager.Setting.WORLD.string.let { createWorld(it) }
+        ConfigManager.Setting.WORLD.string.let { createWorld(it, World.Environment.NORMAL) }
         FileUtils.createFolder(plugin, "schematics")
     }
 
@@ -19,12 +19,11 @@ class WorldManager(plugin: Skyblock) : Manager(plugin) {
         // Unused
     }
 
-    private fun createWorld(worldName: String) {
-
+    private fun createWorld(worldName: String, enviroment: World.Environment) {
         if (Bukkit.getWorld(worldName) == null) {
             val worldCreator = WorldCreator.name(worldName)
                     .type(WorldType.FLAT)
-                    .environment(World.Environment.NORMAL)
+                    .environment(enviroment)
                     .generateStructures(false)
                     .generator(worldGenerator)
             worldCreator.createWorld()

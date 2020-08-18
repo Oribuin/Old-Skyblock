@@ -1,11 +1,12 @@
 package xyz.oribuin.skyblock
 
 import me.bristermitten.pdm.PDMBuilder
+import me.mattstudios.mf.base.CommandManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.commands.CmdIsland
-import xyz.oribuin.skyblock.commands.OriCommand
+import xyz.oribuin.skyblock.listeners.GeneralListeners
 import xyz.oribuin.skyblock.managers.*
 import xyz.oribuin.skyblock.utils.FileUtils
 import kotlin.reflect.KClass
@@ -25,23 +26,18 @@ class Skyblock : JavaPlugin() {
         this.getManager(MessageManager::class)
         this.getManager(WorldManager::class)
 
-        // Register plugin commands.
-        this.registerCommands(CmdIsland(this))
+        // Register commands
+        val cmdManager = CommandManager(this)
+        cmdManager.register(CmdIsland(this))
 
         // Register plugin listeners
-        this.registerListeners()
+        this.registerListeners(GeneralListeners(this))
 
         this.reload()
         this.saveDefaultConfig()
 
         FileUtils.createDirFile(this, "schematics", "plains.schematic")
 
-    }
-
-    private fun registerCommands(vararg commands: OriCommand) {
-        for (cmd in commands) {
-            cmd.registerCommand()
-        }
     }
 
     private fun registerListeners(vararg listeners: Listener) {

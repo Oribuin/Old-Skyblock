@@ -10,7 +10,8 @@ import java.util.*
 class ChunkGeneratorWorld : ChunkGenerator() {
     private fun generateChunks(world: World): ChunkData {
         val result = createChunkData(world)
-        if (world.environment == World.Environment.NORMAL) result.setRegion(0, 0, 0, 16, 1, 16, Material.AIR)
+        if (world.environment == World.Environment.NORMAL)
+            result.setRegion(0, 0, 0, 16, 1, 16, Material.AIR)
         return result
     }
 
@@ -33,6 +34,9 @@ class ChunkGeneratorWorld : ChunkGenerator() {
 
     private fun setBiome(biomeGrid: BiomeGrid) {
         val biome = Biome.PLAINS
-        for (x in 0..15) for (z in 0..15) for (y in 0..255) biomeGrid.setBiome(x, y, z, biome)
+        for (x in 0..15)
+            for (z in 0..15)
+                for (y in 0..255)
+                    biomeGrid.setBiome(x, y, z, biome)
     }
 }

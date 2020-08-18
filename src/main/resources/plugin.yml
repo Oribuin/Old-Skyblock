@@ -11,9 +11,3 @@ softdepend:
   - PlaceholderAPI
 loadbefore:
   - Multiverse-Core
-commands:
-  island:
-    description: Main Island Command
-    usage: /island
-    aliases:
-      - is

@@ -68,10 +68,8 @@ class MessageManager(plugin: Skyblock) : Manager(plugin) {
         // Command success messages
         CMD_CREATED_ISLAND("commands.created-island", "&bYou have successfully created the Island \"%island_name%\"."),
 
-        // Alert Messages
-        ALERTS_USER_REPORTED("alerts.user-reported", "&f%sender% &bhas reported &f%reported%&b for &f&n%reason%&b!"),
-        ALERTS_REPORT_RESOLVED("alerts.report-resolved", "&f%sender% &bhas set &f%reported%''s&b report as &b%resolved%&f!"),
-        ALERTS_REPORT_DELETED("alerts.report-deleted", "&f%sender% &bhas deleted &f%reported%''s&b report (ID: &f%report_id%&b)"),
+        // Listener Messages
+        CANT_ENTER_PORTAL("listener-messages.cant-enter-portal", "&bThe nether/end is not enabled when on an Island."),
 
         // Help Menu
         HELP_MESSAGE("help-message", listOf(

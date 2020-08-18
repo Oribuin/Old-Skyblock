@@ -5,6 +5,9 @@ prefix: '<rainbow:0.7>Skyblock&f » '
 commands:
   created-island: '&bYou have successfully created the Island %island_name%.'
 
+error-messages:
+  cant-enter-portal: '&bYou cannot enter the portal'
+
 # » Misc Messages «
 reload: '&bYou have reloaded Skyblock (&f%version%&b)'
 invalid-permission: '&cYou do not have permission for this command.'

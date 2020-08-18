@@ -61,8 +61,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     private fun getNextAvailableLocation(): Location {
-        // Gays cant do fucking maths what the hell is this shit
-        return Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), islandCount * 200.0, 65.0, islandCount * 200.0).clone()
+        return Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), islandCount * 200.0, 65.0, islandCount * -200.0).clone()
     }
 
     private var islandCount = 0
