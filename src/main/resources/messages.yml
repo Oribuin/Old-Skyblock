@@ -3,13 +3,14 @@ prefix: '<rainbow:0.7>Skyblock&f » '
 
 # Command Messages
 commands:
-  created-island: '&bYou have successfully created the Island %island_name%.'
+  created-island: '&cYou have successfully created the Island %island_name%.'
 
 error-messages:
-  cant-enter-portal: '&bYou cannot enter the portal'
+  cant-enter-portal: '&cYou cannot enter the portal'
+  cant-break-block: '&cYou can only break blocks on your own Island.'
 
 # » Misc Messages «
-reload: '&bYou have reloaded Skyblock (&f%version%&b)'
+reload: '&cYou have reloaded Skyblock (&f%version%&b)'
 invalid-permission: '&cYou do not have permission for this command.'
 invalid-player: '&cThat is not a valid player.'
 invalid-arguments: '&cPlease include valid arguments.'

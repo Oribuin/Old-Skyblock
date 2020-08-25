@@ -59,6 +59,9 @@ object FileUtils {
         if (!file.exists()) {
             plugin.getResource("$directory/$fileName").use { inputStream ->
                 if (inputStream == null) {
+                    if (!file.parentFile.exists())
+                        file.mkdirs()
+
                     file.createNewFile()
                     return
                 }

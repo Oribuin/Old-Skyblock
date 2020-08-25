@@ -1,6 +1,8 @@
 package xyz.oribuin.skyblock.managers
 
 import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.database.DatabaseConnector
 import xyz.oribuin.skyblock.database.MySQLConnector
@@ -8,9 +10,11 @@ import xyz.oribuin.skyblock.database.SQLiteConnector
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.utils.FileUtils.createFile
 import java.sql.Connection
+import java.util.*
 
 class DataManager(plugin: Skyblock) : Manager(plugin) {
     var connector: DatabaseConnector? = null
+    private var island: Island? = null
 
     override fun reload() {
         try {
@@ -48,7 +52,8 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     private fun createTables() {
 
         val queries = arrayOf(
-                "CREATE TABLE IF NOT EXISTS ${tablePrefix}islands (owner_uuid TXT, name, TXT, locked BOOLEAN, center_x DOUBLE, center_y, center_z DOUBLE, range INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE)"
+                "CREATE TABLE IF NOT EXISTS ${tablePrefix}islands (island_id INT, owner_uuid TXT, name, TXT, locked BOOLEAN, center_x DOUBLE, center_y DOUBLE, center_z DOUBLE, range INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE)",
+                "CREATE TABLE IF NOT EXISTS ${tablePrefix}members (island_id INT, uuid TXT, islandOwner BOOLEAN, PRIMARY KEY(uuid))"
         )
 
         async {
@@ -63,18 +68,19 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     fun createIslandData(island: Island) {
         async {
             connector?.connect { connection: Connection ->
-                val createIslandData = "INSERT INTO ${tablePrefix}islands (owner_uuid, name, locked, center_x, center_y, center_z, range, spawn_x, spawn_y, spawn_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                val createIslandData = "REPLACE INTO ${tablePrefix}islands (island_id, owner_uuid, name, locked, center_x, center_y, center_z, range, spawn_x, spawn_y, spawn_z) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
                 connection.prepareStatement(createIslandData).use { statement ->
-                    statement.setString(1, island.owner.toString())
-                    statement.setString(2, island.name)
-                    statement.setBoolean(3, island.isLocked)
-                    statement.setDouble(4, island.center.x)
-                    statement.setDouble(5, island.center.y)
-                    statement.setDouble(6, island.center.z)
-                    statement.setInt(7, island.islandRange)
-                    statement.setDouble(8, island.spawnPoint.x)
-                    statement.setDouble(9, island.spawnPoint.y)
-                    statement.setDouble(10, island.spawnPoint.z)
+                    statement.setInt(1, island.id)
+                    statement.setString(2, island.owner.toString())
+                    statement.setString(3, island.name)
+                    statement.setBoolean(4, island.isLocked)
+                    statement.setDouble(5, island.center.x)
+                    statement.setDouble(6, island.center.y)
+                    statement.setDouble(7, island.center.z)
+                    statement.setInt(8, island.islandRange)
+                    statement.setDouble(9, island.spawnPoint.x)
+                    statement.setDouble(10, island.spawnPoint.y)
+                    statement.setDouble(11, island.spawnPoint.z)
 
                     statement.executeUpdate()
                 }
@@ -82,10 +88,63 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
         }
     }
 
-    private fun async(asyncCallback: Runnable) {
+    fun deleteIslandData(island: Island) {
+        async {
+            connector?.connect { connection ->
+                val clearIsland = "DELETE FROM ${tablePrefix}islands WHERE island_id = ?"
+                connection.prepareStatement(clearIsland).use { statement ->
+                    statement.setInt(1, island.id)
+                    statement.executeUpdate()
+                }
+
+                val clearMember = "DELETE FROM ${tablePrefix}members WHERE island_id = ?"
+                connection.prepareStatement(clearMember).use { statement ->
+                    statement.setInt(1, island.id)
+                    statement.executeUpdate()
+                }
+            }
+        }
+    }
+
+
+    fun getIslandFromId(id: Int): Island? {
+        connector?.connect { connection ->
+            val query = "SELECT * FROM ${tablePrefix}islands WHERE island_id = ?"
+            connection.prepareStatement(query).use { statement ->
+                statement.setInt(1, id)
+                val result = statement.executeQuery()
+
+                if (result.next()) {
+                    val location = Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), result.getDouble("center_x"), result.getDouble("center_y"), result.getDouble("result_z"))
+
+                    island = Island(result.getInt("island_id"), result.getString("name"), location, UUID.fromString(result.getString("owner")), result.getInt("range"))
+                }
+
+            }
+        }
+
+        return island
+    }
+
+    fun createUser(player: Player, island: Island) {
+        async {
+            connector?.connect { connection ->
+                val createUser = "REPLACE INTO ${tablePrefix}members (uuid, islandOwner,island_id) VALUES (?, ?, ?)"
+                connection.prepareStatement(createUser).use { statement ->
+                    statement.setString(1, player.uniqueId.toString())
+                    statement.setBoolean(2, false)
+                    statement.setInt(3, island.id)
+
+                    statement.executeUpdate()
+                }
+            }
+        }
+    }
+
+    fun async(asyncCallback: Runnable) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, asyncCallback)
     }
 
-    private val tablePrefix: String
+    val tablePrefix: String
         get() = plugin.description.name.toLowerCase() + "_"
 }

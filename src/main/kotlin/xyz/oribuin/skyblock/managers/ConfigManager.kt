@@ -1,8 +1,8 @@
 package xyz.oribuin.skyblock.managers
 
 import org.bukkit.configuration.file.FileConfiguration
-import xyz.oribuin.skyblock.Skyblock
 import java.io.File
+import xyz.oribuin.skyblock.Skyblock
 
 class ConfigManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
@@ -22,8 +22,9 @@ class ConfigManager(plugin: Skyblock) : Manager(plugin) {
 
     enum class Setting(val key: String, val defaultValue: Any) {
         WORLD("world-name", "Islands"),
+        CMD_ISLAND_CREATE_COOLDOWN("cooldowns.create-island-cooldown", 3600),
         TIME("date-time-format", "HH:mm dd/m/yyyy"),
-        SETTINGS_SIZE("island-settings.size", 100),
+        SETTINGS_SIZE("island-settings.size", 300.0),
         SQL_ENABLED("my-sql.enabled", false),
         SQL_HOSTNAME("my-sql.hostname", ""),
         SQL_PORT("my-sql.port", 3315),

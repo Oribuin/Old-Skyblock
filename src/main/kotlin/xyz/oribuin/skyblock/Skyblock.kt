@@ -1,11 +1,10 @@
 package xyz.oribuin.skyblock
 
-import me.bristermitten.pdm.PDMBuilder
-import me.mattstudios.mf.base.CommandManager
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.commands.CmdIsland
+import xyz.oribuin.skyblock.commands.OriCommand
 import xyz.oribuin.skyblock.listeners.GeneralListeners
 import xyz.oribuin.skyblock.managers.*
 import xyz.oribuin.skyblock.utils.FileUtils
@@ -14,10 +13,9 @@ import kotlin.reflect.KClass
 class Skyblock : JavaPlugin() {
 
     // Manager reflection taken from RoseStacker.
-    private val managers: MutableMap<KClass<out Manager>, Manager> = HashMap()
+    private var managers: MutableMap<KClass<out Manager>, Manager> = HashMap()
 
     override fun onEnable() {
-        PDMBuilder(this).build().loadAllDependencies().join()
 
         this.getManager(ConfigManager::class)
         this.getManager(DataManager::class)
@@ -26,24 +24,33 @@ class Skyblock : JavaPlugin() {
         this.getManager(MessageManager::class)
         this.getManager(WorldManager::class)
 
-        // Register commands
-        val cmdManager = CommandManager(this)
-        cmdManager.register(CmdIsland(this))
+        // Register plugin commands
+        this.registerCommands(CmdIsland(this))
 
         // Register plugin listeners
         this.registerListeners(GeneralListeners(this))
 
         this.reload()
         this.saveDefaultConfig()
+        createSchematics("desert", "ice", "default", "mesa", "mushroom", "nether", "plains")
 
-        FileUtils.createDirFile(this, "schematics", "plains.schematic")
+    }
 
+    private fun registerCommands(vararg commands: OriCommand) {
+        for (cmd in commands) {
+            cmd.register()
+        }
     }
 
     private fun registerListeners(vararg listeners: Listener) {
         for (listener in listeners) {
             Bukkit.getPluginManager().registerEvents(listener, this)
         }
+    }
+
+    private fun createSchematics(vararg schems: String) {
+        for (schematic in schems)
+            FileUtils.createDirFile(this, "schematics", "$schematic.schematic")
     }
 
     fun reload() {

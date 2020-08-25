@@ -10,6 +10,7 @@ import com.sk89q.worldedit.session.ClipboardHolder
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import xyz.oribuin.skyblock.Skyblock
+import xyz.oribuin.skyblock.events.IslandCreateEvent
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.utils.FileUtils
 import java.io.File
@@ -19,8 +20,7 @@ import java.util.*
 
 class IslandManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
-        FileUtils.createFolder(plugin, "schematics")
-        FileUtils.createFile(plugin, File("${plugin.dataFolder}{${File.separator}schematics", "plains.schematic"))
+        // Unused
     }
 
     override fun disable() {
@@ -28,10 +28,13 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     fun createIsland(name: String, schematicName: String, owner: UUID, islandRange: Int): Island {
-        val island = Island(name, getNextAvailableLocation(), owner, islandRange)
-        island.center = getNextAvailableLocation()
-        this.createSchematic(island, schematicName)
+        val island = Island(islandCount + 1, name, getNextAvailableLocation(), owner, islandRange)
+        createSchematic(island, schematicName)
+
         plugin.getManager(DataManager::class).createIslandData(island)
+        Bukkit.getPlayer(owner)?.let { plugin.getManager(DataManager::class).createUser(it, island) }
+        Bukkit.getPlayer(owner)?.teleport(island.spawnPoint)
+        Bukkit.getPluginManager().callEvent(IslandCreateEvent(island))
 
         return island
     }
@@ -61,7 +64,10 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     private fun getNextAvailableLocation(): Location {
-        return Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), islandCount * 200.0, 65.0, islandCount * -200.0).clone()
+        return Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string),
+                islandCount * ConfigManager.Setting.SETTINGS_SIZE.double + 50.0,
+                65.0,
+                islandCount * -ConfigManager.Setting.SETTINGS_SIZE.double + -50.0).clone()
     }
 
     private var islandCount = 0

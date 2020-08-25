@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.0'
-    id 'me.bristermitten.pdm' version "0.0.20"
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 
@@ -29,23 +29,22 @@ repositories {
 
 dependencies {
     // Overlord language
-    pdm "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    pdm "org.jetbrains.kotlin:kotlin-reflect:1.3.72"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.0"
 
     // Spigot Stuff
-    compileOnly 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.10.9'
+    shadow 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+    shadow 'me.clip:placeholderapi:2.10.9'
 
     // Frameworks
-    pdm 'dev.esophose:guiframework:1.1.0'
-    compileOnly 'me.mattstudios.utils:matt-framework:1.3'
+    implementation 'dev.esophose:guiframework:1.1.0'
 
     // Plugin Hooks
-    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
-    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
+    shadow 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
+    shadow 'com.github.MilkBowl:VaultAPI:1.7'
 
-    // Databse Stuff
-    pdm 'com.zaxxer:HikariCP:3.4.5'
+    // Database Stuff
+    implementation 'com.zaxxer:HikariCP:3.4.5'
 }
 
 processResources {
@@ -61,4 +60,9 @@ compileKotlin {
     }
 }
 
-jar.dependsOn project.tasks.getByName('pdm')
+shadowJar {
+    mergeServiceFiles()
+    archiveFileName = 'Skyblock-' + project.property("version") + '.jar'
+    relocate('dev.rosewood.guiframework', 'xyz.oribuin.skyblock.libs.guiframework')
+    relocate('org.jetbrains.kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
+}

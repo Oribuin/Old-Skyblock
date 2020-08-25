@@ -1,76 +1,144 @@
 package xyz.oribuin.skyblock.commands
-
-import me.mattstudios.mf.annotations.Command
-import me.mattstudios.mf.annotations.Completion
-import me.mattstudios.mf.annotations.Default
-import me.mattstudios.mf.annotations.SubCommand
-import me.mattstudios.mf.base.CommandBase
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
-import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.util.StringUtil
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.events.IslandCreateEvent
+import xyz.oribuin.skyblock.island.IslandMember
 import xyz.oribuin.skyblock.managers.ConfigManager
+import xyz.oribuin.skyblock.managers.DataManager
 import xyz.oribuin.skyblock.managers.IslandManager
 import xyz.oribuin.skyblock.managers.MessageManager
-import xyz.oribuin.skyblock.utils.HexUtils
+import xyz.oribuin.skyblock.menus.CreateIslandMenu
 import xyz.oribuin.skyblock.utils.StringPlaceholders
+import java.util.*
+import kotlin.collections.ArrayList
 
-@Command("island")
-class CmdIsland(private val plugin: Skyblock) : CommandBase() {
+class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
 
-    private val msg = plugin.getManager(MessageManager::class)
+    override fun executeCommand(sender: CommandSender, args: Array<String>) {
 
-    @Default
-    fun defaultCommand(sender: CommandSender) {
-        if (!sender.hasPermission("skyblock.help")) {
-            msg.sendMessage(sender, "invalid-permission")
-            return
+        if (args.size == 1) {
+            when (args[0].toLowerCase()) {
+                "reload" -> {
+                    this.reload(sender)
+                }
+
+                "go", "teleport" -> {
+                    if (sender !is Player)
+                        return
+
+                    val member = IslandMember(plugin, sender.uniqueId)
+                    member.getIsland()?.center?.let { sender.teleport(it) }
+                }
+
+                "delete" -> {
+                    if (sender !is Player)
+                        return
+
+                    val member = IslandMember(plugin, sender.uniqueId)
+                    member.getIsland()?.let { plugin.getManager(DataManager::class).deleteIslandData(it) }
+                }
+            }
         }
 
-
-        for (string in msg.messageConfig.getStringList("help-message")) {
-            sender.sendMessage(HexUtils.colorify(string))
-        }
-
-        if (sender is Player) {
-            sender.playSound(sender.location, Sound.ENTITY_ARROW_HIT_PLAYER, 50f, 1f)
+        if (args.size >= 2) {
+            when (args[0].toLowerCase()) {
+                "create" -> {
+                    this.createIsland(sender, args)
+                }
+            }
         }
     }
 
-    @SubCommand("create")
-    @Completion("<name>")
-    fun createIsland(sender: CommandSender, args: List<String>, schematicName: String) {
-        val islandManager = plugin.getManager(IslandManager::class)
+    private fun createIsland(sender: CommandSender, args: Array<String>) {
+        val cooldowns: MutableMap<UUID, Long> = HashMap()
+
+        val msg = plugin.getManager(MessageManager::class)
 
         if (sender !is Player) {
             msg.sendMessage(sender, "player-only")
             return
         }
 
+        val member = IslandMember(plugin, sender.uniqueId)
+
+        /*
+        if (member.hasIsland || member.islandOwner) {
+            msg.sendMessage(sender, "you-have-island")
+            return
+        }
+
+         */
+
+        if (cooldowns.containsKey(sender.uniqueId)) {
+            val secondsLeft = (cooldowns[sender.uniqueId] ?: return).div(1000).plus(ConfigManager.Setting.CMD_ISLAND_CREATE_COOLDOWN.long).minus(System.currentTimeMillis().div(1000))
+
+            if (secondsLeft > 0) {
+                msg.sendMessage(sender, "cooldown", StringPlaceholders.single("cooldown", secondsLeft))
+                return
+            }
+        }
+
+        //cooldowns[sender.uniqueId] = System.currentTimeMillis()
+
         if (args.size < 2) {
             msg.sendMessage(sender, "invalid-arguments")
             return
         }
-        val islandName = args[1].toLowerCase()
-        val island = islandManager.createIsland(islandName, schematicName, sender.uniqueId, ConfigManager.Setting.SETTINGS_SIZE.int)
-        sender.teleport(island.spawnPoint)
 
-        msg.sendMessage(sender, "commands.created-island", StringPlaceholders.builder("island_name", island.name).addPlaceholder("island_type", StringUtils.capitalize(schematicName)).build())
-
-        Bukkit.getPluginManager().callEvent(IslandCreateEvent(island))
+        val islandName = java.lang.String.join(" ", *args).substring(args[0].length + 1)
+        CreateIslandMenu(plugin, sender, islandName).openMenu()
     }
 
-    @SubCommand("admin reload")
-    fun reloadCommand(sender: CommandSender) {
-        if (!sender.hasPermission("skyblock.admin.reload")) {
-            msg.sendMessage(sender, "invalid-permission")
+    private fun reload(sender: CommandSender) {
+        val messageManager = plugin.getManager(MessageManager::class)
+
+        if (!sender.hasPermission("skyblock.reload")) {
+            messageManager.sendMessage(sender, "invalid-permission")
             return
         }
 
-        msg.sendMessage(sender, "reload", StringPlaceholders.single("version", plugin.description.version))
-        plugin.reload()
+
+        this.plugin.reload()
+        messageManager.sendMessage(sender, "reload", StringPlaceholders.single("version", this.plugin.description.version))
+    }
+
+    override fun tabComplete(sender: CommandSender, args: Array<String>): List<String>? {
+
+        val suggestions: MutableList<String> = ArrayList()
+        if (args.isEmpty() || args.size == 1) {
+            val subCommand = if (args.isEmpty()) "" else args[0]
+
+            when (subCommand.toLowerCase()) {
+                "create" -> {
+                    if (sender.hasPermission("skyblock.create")) {
+                        StringUtil.copyPartialMatches(subCommand, setOf("<Island-Name>"), suggestions)
+                    }
+                }
+
+                "reload" -> {
+                    if (sender.hasPermission("skyblock.reload")) {
+                        StringUtil.copyPartialMatches(subCommand, setOf("reload"), suggestions)
+                    }
+                }
+            }
+            return null
+        } else if (args.size == 2) {
+
+            when (args[1].toLowerCase()) {
+                "create" -> {
+                    if (sender.hasPermission("skyblock.create")) {
+                        StringUtil.copyPartialMatches(args[1], setOf("plains"), suggestions)
+                    }
+                }
+            }
+        } else {
+            return null
+        }
+
+        return suggestions
     }
 }

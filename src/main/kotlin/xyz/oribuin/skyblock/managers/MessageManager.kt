@@ -66,7 +66,7 @@ class MessageManager(plugin: Skyblock) : Manager(plugin) {
         RELOAD("reload", "&bYou have reloaded Skyblock (&f%version%&b)"),
 
         // Command success messages
-        CMD_CREATED_ISLAND("commands.created-island", "&bYou have successfully created the Island \"%island_name%\"."),
+        CMD_CREATED_ISLAND("commands.created-island", "&bYou have successfully created your Island,  %island_name%."),
 
         // Listener Messages
         CANT_ENTER_PORTAL("listener-messages.cant-enter-portal", "&bThe nether/end is not enabled when on an Island."),
