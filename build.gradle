@@ -60,8 +60,8 @@ compileKotlin {
 }
 
 shadowJar {
-    relocate('kotlin', 'net.arsentic.core.libs.kotlin')
+    relocate('kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
     relocate('dev.rosewood.guiframework', 'net.arsentic.core.libs.guiframework')
-    relocate ('de.tr7zw', 'net.arsentic.core.libs.nbtapi')
+    relocate ('de.tr7zw', xyz.oribuin.skyblock.libs.nbtapi')
     archiveFileName = 'Skyblock-' + project.property("version") + '.jar'
 }
