@@ -1,7 +1,10 @@
 package xyz.oribuin.skyblock.commands
+import net.minecraft.server.v1_16_R2.PacketPlayOutWorldBorder
+import net.minecraft.server.v1_16_R2.WorldBorder
 import org.apache.commons.lang.StringUtils
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 import xyz.oribuin.skyblock.Skyblock
@@ -40,6 +43,16 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
 
                     val member = IslandMember(plugin, sender.uniqueId)
                     member.getIsland()?.let { plugin.getManager(DataManager::class).deleteIslandData(it) }
+                }
+
+                "border" -> {
+                    if (sender !is Player)
+                        return
+
+                    val craftPlayer = sender as CraftPlayer
+
+                    val packet = PacketPlayOutWorldBorder(WorldBorder(), PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE)
+                    craftPlayer.handle.playerConnection.sendPacket(packet)
                 }
             }
         }

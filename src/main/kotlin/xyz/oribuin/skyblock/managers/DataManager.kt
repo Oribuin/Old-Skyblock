@@ -89,6 +89,7 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     fun deleteIslandData(island: Island) {
+        // TODO: Stop deleting island data entirely or remove the island
         async {
             connector?.connect { connection ->
                 val clearIsland = "DELETE FROM ${tablePrefix}islands WHERE island_id = ?"
@@ -115,9 +116,29 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
                 val result = statement.executeQuery()
 
                 if (result.next()) {
-                    val location = Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), result.getDouble("center_x"), result.getDouble("center_y"), result.getDouble("result_z"))
+                    val location = Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), result.getDouble("center_x"), result.getDouble("center_y"), result.getDouble("center_z"))
 
-                    island = Island(result.getInt("island_id"), result.getString("name"), location, UUID.fromString(result.getString("owner")), result.getInt("range"))
+                    island = Island(result.getInt("island_id"), result.getString("name"), location, UUID.fromString(result.getString("owner_uuid")), result.getInt("range"))
+                }
+
+            }
+        }
+
+        return island
+    }
+
+    fun getIslandFromLocation(location: Location): Island? {
+        connector?.connect { connection ->
+            val query = "SELECT * FROM ${tablePrefix}islands WHERE center_x = ? AND center_z = ?"
+            connection.prepareStatement(query).use { statement ->
+                statement.setDouble(1, location.x)
+                statement.setDouble(2, location.z)
+
+                val result = statement.executeQuery()
+
+                if (result.next()) {
+                    val loc = Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), result.getDouble("center_x"), result.getDouble("center_y"), result.getDouble("center_z"))
+                    island = Island(result.getInt("island_id"), result.getString("name"), loc, UUID.fromString(result.getString("owner_uuid")), result.getInt("range"))
                 }
 
             }
@@ -129,7 +150,7 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
     fun createUser(player: Player, island: Island) {
         async {
             connector?.connect { connection ->
-                val createUser = "REPLACE INTO ${tablePrefix}members (uuid, islandOwner,island_id) VALUES (?, ?, ?)"
+                val createUser = "REPLACE INTO ${tablePrefix}members (uuid, islandOwner ,island_id) VALUES (?, ?, ?)"
                 connection.prepareStatement(createUser).use { statement ->
                     statement.setString(1, player.uniqueId.toString())
                     statement.setBoolean(2, false)

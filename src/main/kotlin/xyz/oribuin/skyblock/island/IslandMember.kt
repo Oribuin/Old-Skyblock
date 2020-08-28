@@ -43,7 +43,7 @@ class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {
     fun getIsland(): Island? {
         var island: Island? = null
 
-        if (!hasIsland || !islandOwner)
+        if (!hasIsland && !islandOwner)
             return null
 
         data.connector?.connect { connection ->

@@ -47,7 +47,7 @@ class CreateIslandMenu(private val plugin: Skyblock, private val player: Player,
                 listOf(" &f» &bIsland Type: &fDefault",
                         " &f» &bName: &f$islandName",
                         " ",
-                        "&bClick to create your Island!"), Material.GRASS_BLOCK))
+                        "&bClick to create your Island!"), Material.OAK_SAPLING))
 
         screen.addButtonAt(11, getIslandDesignButton("plains",
                 listOf(" &f» &bIsland Type: &fPlains",
