@@ -65,6 +65,12 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
         }
     }
 
+
+    /**
+     * Create the island data inside the database.
+     *
+     * @param island The island that is being added to the database
+     */
     fun createIslandData(island: Island) {
         async {
             connector?.connect { connection: Connection ->
@@ -88,6 +94,11 @@ class DataManager(plugin: Skyblock) : Manager(plugin) {
         }
     }
 
+    /**
+     * Delete the island data from the database
+     *
+     * @param island The island that is being deleted
+     */
     fun deleteIslandData(island: Island) {
         // TODO: Stop deleting island data entirely or remove the island
         async {

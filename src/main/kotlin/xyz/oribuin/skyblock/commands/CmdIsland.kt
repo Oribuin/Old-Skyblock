@@ -1,20 +1,18 @@
 package xyz.oribuin.skyblock.commands
+
 import net.minecraft.server.v1_16_R2.PacketPlayOutWorldBorder
 import net.minecraft.server.v1_16_R2.WorldBorder
-import org.apache.commons.lang.StringUtils
-import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.events.IslandCreateEvent
 import xyz.oribuin.skyblock.island.IslandMember
 import xyz.oribuin.skyblock.managers.ConfigManager
-import xyz.oribuin.skyblock.managers.DataManager
 import xyz.oribuin.skyblock.managers.IslandManager
 import xyz.oribuin.skyblock.managers.MessageManager
 import xyz.oribuin.skyblock.menus.CreateIslandMenu
+import xyz.oribuin.skyblock.utils.HexUtils
 import xyz.oribuin.skyblock.utils.StringPlaceholders
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,7 +40,8 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
                         return
 
                     val member = IslandMember(plugin, sender.uniqueId)
-                    member.getIsland()?.let { plugin.getManager(DataManager::class).deleteIslandData(it) }
+                    sender.sendMessage(HexUtils.colorify("<rainbow:0.7:l>Now deleting the island, lord what have you done. You're fucked..."))
+                    member.getIsland()?.let { plugin.getManager(IslandManager::class).deleteIsland(it) }
                 }
 
                 "border" -> {
@@ -87,7 +86,8 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
          */
 
         if (cooldowns.containsKey(sender.uniqueId)) {
-            val secondsLeft = (cooldowns[sender.uniqueId] ?: return).div(1000).plus(ConfigManager.Setting.CMD_ISLAND_CREATE_COOLDOWN.long).minus(System.currentTimeMillis().div(1000))
+            val secondsLeft = (cooldowns[sender.uniqueId]
+                    ?: return).div(1000).plus(ConfigManager.Setting.CMD_ISLAND_CREATE_COOLDOWN.long).minus(System.currentTimeMillis().div(1000))
 
             if (secondsLeft > 0) {
                 msg.sendMessage(sender, "cooldown", StringPlaceholders.single("cooldown", secondsLeft))

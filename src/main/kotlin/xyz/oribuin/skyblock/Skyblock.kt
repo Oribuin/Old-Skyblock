@@ -1,5 +1,6 @@
 package xyz.oribuin.skyblock
 
+import me.bristermitten.pdm.PDMBuilder
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
@@ -13,8 +14,11 @@ import kotlin.reflect.KClass
 
 class Skyblock : JavaPlugin() {
 
-    // Manager reflection taken from RoseStacker.
-    private var managers: MutableMap<KClass<out Manager>, Manager> = HashMap()
+    private var managers = mutableMapOf<KClass<out Manager>, Manager>()
+
+    override fun onLoad() {
+        PDMBuilder(this).build().loadAllDependencies().join()
+    }
 
     override fun onEnable() {
         this.getManager(ConfigManager::class)
@@ -34,8 +38,7 @@ class Skyblock : JavaPlugin() {
         this.saveDefaultConfig()
         createSchematics("desert", "ice", "default", "mesa", "mushroom", "nether", "plains")
 
-
-
+        /*
         Bukkit.getScheduler().runTaskTimer(this, Runnable {
             Bukkit.getOnlinePlayers().forEach { player ->
                 val islandManager = getManager(IslandManager::class)
@@ -43,7 +46,7 @@ class Skyblock : JavaPlugin() {
                 player.sendMessage(HexUtils.colorify("<r:0.5>Is on island: ${islandManager.isOnOwnIsland(player)}"))
             }
         }, 0, 1)
-
+         */
     }
 
     private fun registerCommands(vararg commands: OriCommand) {
@@ -66,7 +69,7 @@ class Skyblock : JavaPlugin() {
     fun reload() {
         this.disableManagers()
         this.server.scheduler.cancelTasks(this)
-        this.managers.values.forEach { manager -> manager.reload() }
+        managers.values.forEach { manager -> manager.reload() }
     }
 
     override fun onDisable() {
@@ -74,19 +77,19 @@ class Skyblock : JavaPlugin() {
     }
 
     private fun disableManagers() {
-        this.managers.values.forEach { manager -> manager.disable() }
+        managers.values.forEach { manager -> manager.disable() }
     }
 
     fun <M : Manager> getManager(managerClass: KClass<M>): M {
-        synchronized(this.managers) {
+        synchronized(managers) {
             @Suppress("UNCHECKED_CAST")
-            if (this.managers.containsKey(managerClass))
-                return this.managers[managerClass] as M
+            if (managers.containsKey(managerClass))
+                return managers[managerClass] as M
 
             return try {
                 val manager = managerClass.constructors.first().call(this)
                 manager.reload()
-                this.managers[managerClass] = manager
+                managers[managerClass] = manager
                 manager
             } catch (ex: ReflectiveOperationException) {
                 error("Failed to load manager for ${managerClass.simpleName}")

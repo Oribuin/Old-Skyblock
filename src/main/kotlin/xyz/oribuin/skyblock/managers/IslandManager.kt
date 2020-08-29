@@ -9,16 +9,17 @@ import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.session.ClipboardHolder
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.events.IslandCreateEvent
+import xyz.oribuin.skyblock.events.IslandDeleteEvent
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.island.IslandMember
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.util.*
-import kotlin.concurrent.fixedRateTimer
 
 class IslandManager(plugin: Skyblock) : Manager(plugin) {
     val players = mutableMapOf<UUID, Island>()
@@ -71,12 +72,12 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
 
     private fun getNextAvailableLocation(): Location {
         return Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string),
-                islandCount * ConfigManager.Setting.SETTINGS_SIZE.double + 50.0,
+                islandCount * ConfigManager.Setting.SETTINGS_SIZE.double + 50.500,
                 65.0,
-                islandCount * -ConfigManager.Setting.SETTINGS_SIZE.double + -50.0).clone()
+                islandCount * ConfigManager.Setting.SETTINGS_SIZE.double + 50.500).clone()
     }
 
-    private var islandCount = 0
+    var islandCount = 0
         get() {
             val dataManager = plugin.getManager(DataManager::class)
             dataManager.connector?.connect { connection ->
@@ -90,30 +91,53 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
             return field;
         }
 
-    fun getPlayersIn(island: Island): Map<UUID, Island> {
-        island.center.world?.getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble())?.forEach { entity ->
-            if (entity !is Player)
-                return@forEach
-
-            if (!players.containsKey(entity.uniqueId) && !players.containsValue(island)) {
-                players.remove(entity.uniqueId, island)
-            }
-
-            players[entity.uniqueId] = island
-        }
-
-        return players
-    }
-
     fun isOnOwnIsland(player: Player): Boolean {
         val member = IslandMember(plugin, player.uniqueId)
 
         if (!member.hasIsland && !member.islandOwner)
             return false
 
-        val island = member.getIsland()?: return false
+        val island = member.getIsland() ?: return false
 
         return island.center.world?.getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble())?.contains(player)!!
+    }
+
+    fun deleteIsland(island: Island) {
+        // Delete island from world (Could cause lag, who knows honestly)
+
+        val cube = plugin.getManager(MathManager::class).getCuboid(island.center, island.islandRange, island.center.y.toInt(), island.islandRange)
+
+        // Worldedit island deletion (This will infact, delete the island while spitting out errors and crashing the server)
+        /*
+        val region = CuboidRegion(BlockVector3.at(cube[0].x, 0.0, cube[0].z), BlockVector3.at(cube[1].x, 256.0, cube[1].z))
+
+        val editSession = WorldEdit.getInstance().editSessionFactory.getEditSession(BukkitAdapter.adapt(island.center.world), -1)
+        editSession.setBlocks(region, BlockTypes.AIR?.defaultState)
+
+         */
+
+        // Cancer code incoming
+        var x = cube[0].x
+        while (x < cube[1].x) {
+            var y = cube[0].y
+            while (y < cube[1].y) {
+                var z = cube[0].z
+                while (z < cube[1].z) {
+                    val location = Location(island.center.world, x, y, z)
+                    val block = island.center.world?.getBlockAt(location)
+                    if (block?.type != Material.AIR) {
+                        block?.type = Material.AIR
+                    }
+                    z++
+                }
+                y++
+            }
+            x++
+        }
+
+        // Delete island from database
+        plugin.getManager(DataManager::class).deleteIslandData(island)
+        Bukkit.getPluginManager().callEvent(IslandDeleteEvent(island))
     }
 
 

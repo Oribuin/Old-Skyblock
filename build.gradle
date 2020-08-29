@@ -3,7 +3,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.0'
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    //id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'me.bristermitten.pdm' version '0.0.25'
 }
 
 
@@ -19,31 +20,31 @@ repositories {
     // Spigot
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url 'https://repo.codemc.org/repository/maven-public' }
-    maven { url = 'https://repo.rosewooddev.io/repository/public/' }
+    maven { url 'https://repo.rosewooddev.io/repository/public/' }
     maven { url 'http://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://maven.enginehub.org/repo/' }
-    maven { url = 'https://jitpack.io' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     // Overlord language
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.0"
+    pdm "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    pdm "org.jetbrains.kotlin:kotlin-reflect:1.4.0"
 
     // Spigot Stuff
-    shadow 'org.spigotmc:spigot:1.16.2'
+    compileOnly 'org.spigotmc:spigot:1.16.2'
     compileOnly 'me.clip:placeholderapi:2.10.9'
 
     // Frameworks
-    implementation 'dev.esophose:guiframework:1.1.0'
+    pdm 'dev.rosewood:guiframework:1.1.1'
 
     // Plugin Hooks
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
 
     // Misc
-    implementation 'com.zaxxer:HikariCP:3.4.5'
-    implementation 'de.tr7zw:item-nbt-api:2.5.0'
+    pdm 'com.zaxxer:HikariCP:3.4.5'
+    pdm 'de.tr7zw:item-nbt-api:2.5.0'
 }
 
 processResources {
@@ -59,9 +60,13 @@ compileKotlin {
     }
 }
 
+/*
 shadowJar {
     relocate('kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
     relocate('dev.rosewood.guiframework', 'net.arsentic.core.libs.guiframework')
-    relocate ('de.tr7zw', xyz.oribuin.skyblock.libs.nbtapi')
+    relocate ('de.tr7zw', 'xyz.oribuin.skyblock.libs.nbtapi')
     archiveFileName = 'Skyblock-' + project.property("version") + '.jar'
 }
+ */
+
+jar.dependsOn project.tasks.getByName('pdm')
