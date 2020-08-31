@@ -3,7 +3,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.0'
-    //id 'com.github.johnrengelman.shadow' version '6.0.0'
     id 'me.bristermitten.pdm' version '0.0.25'
 }
 
@@ -12,6 +11,7 @@ group 'xyz.oribuin'
 version '1.0'
 compileJava.options.encoding = 'UTF-8'
 
+sourceCompatibility = JavaVersion.VERSION_1_8
 repositories {
     mavenCentral()
     mavenLocal()
@@ -59,14 +59,5 @@ compileKotlin {
         jvmTarget = "1.8"
     }
 }
-
-/*
-shadowJar {
-    relocate('kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
-    relocate('dev.rosewood.guiframework', 'net.arsentic.core.libs.guiframework')
-    relocate ('de.tr7zw', 'xyz.oribuin.skyblock.libs.nbtapi')
-    archiveFileName = 'Skyblock-' + project.property("version") + '.jar'
-}
- */
 
 jar.dependsOn project.tasks.getByName('pdm')
