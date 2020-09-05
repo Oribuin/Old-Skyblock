@@ -16,7 +16,6 @@ class PlaceholderExp(private val plugin: Skyblock) : PlaceholderExpansion() {
         return null
     }
 
-
     override fun persist(): Boolean {
         return true
     }
@@ -32,6 +31,4 @@ class PlaceholderExp(private val plugin: Skyblock) : PlaceholderExpansion() {
     override fun getVersion(): String {
         return plugin.description.version
     }
-
-
 }

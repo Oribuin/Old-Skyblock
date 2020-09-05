@@ -120,6 +120,4 @@ class MessageManager(plugin: Skyblock) : Manager(plugin) {
         }
 
     }
-
-
 }

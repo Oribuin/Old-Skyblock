@@ -28,6 +28,4 @@ open class MathManager(plugin: Skyblock): Manager(plugin) {
         val max = center.clone().add(radiusX.toDouble(), radiusY.toDouble(), radiusZ.toDouble())
         return arrayOf(min, max)
     }
-
-
 }
