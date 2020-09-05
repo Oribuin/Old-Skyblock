@@ -47,10 +47,13 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
                 "border" -> {
                     if (sender !is Player)
                         return
-
+                    
+                    val member = IslandMember(plugin, sender.uniqueId)
                     val craftPlayer = sender as CraftPlayer
 
-                    val packet = PacketPlayOutWorldBorder(WorldBorder(), PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE)
+                    val worldBorder = WorldBorder()
+
+                    val packet = PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE)
                     craftPlayer.handle.playerConnection.sendPacket(packet)
                 }
             }
