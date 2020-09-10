@@ -3,7 +3,7 @@ package xyz.oribuin.skyblock.island
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.managers.DataManager
+import xyz.oribuin.skyblock.manager.DataManager
 import java.util.*
 
 class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {

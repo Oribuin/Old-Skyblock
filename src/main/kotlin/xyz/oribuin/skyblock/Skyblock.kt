@@ -4,12 +4,11 @@ import me.bristermitten.pdm.PDMBuilder
 import org.bukkit.Bukkit
 import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
-import xyz.oribuin.skyblock.commands.CmdIsland
-import xyz.oribuin.skyblock.commands.OriCommand
-import xyz.oribuin.skyblock.listeners.GeneralListeners
-import xyz.oribuin.skyblock.managers.*
-import xyz.oribuin.skyblock.utils.FileUtils
-import xyz.oribuin.skyblock.utils.HexUtils
+import xyz.oribuin.skyblock.command.CmdIsland
+import xyz.oribuin.skyblock.command.OriCommand
+import xyz.oribuin.skyblock.listener.GeneralListeners
+import xyz.oribuin.skyblock.manager.*
+import xyz.oribuin.skyblock.util.FileUtils
 import kotlin.reflect.KClass
 
 class Skyblock : JavaPlugin() {
