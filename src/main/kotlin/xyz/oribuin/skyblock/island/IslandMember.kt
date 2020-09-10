@@ -12,14 +12,14 @@ class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {
 
     var hasIsland: Boolean = false
         get() {
-             data.connector?.connect { connection ->
-                 val query = "SELECT * FROM ${data.tablePrefix}members WHERE uuid = ?"
-                 connection.prepareStatement(query).use { statement ->
-                     statement.setString(1, uuid.toString())
-                     val result = statement.executeQuery()
-                     if (result.next())
-                         field = result.getBoolean(1)
-                 }
+            data.connector?.connect { connection ->
+                val query = "SELECT * FROM ${data.tablePrefix}members WHERE uuid = ?"
+                connection.prepareStatement(query).use { statement ->
+                    statement.setString(1, uuid.toString())
+                    val result = statement.executeQuery()
+                    if (result.next())
+                        field = result.getBoolean(1)
+                }
             }
 
             return field
@@ -59,7 +59,6 @@ class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {
 
         return island
     }
-
 
 
     val player: OfflinePlayer = Bukkit.getOfflinePlayer(uuid)

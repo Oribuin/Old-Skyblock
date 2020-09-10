@@ -1,8 +1,8 @@
 package xyz.oribuin.skyblock.manager
 
 import org.bukkit.configuration.file.FileConfiguration
-import java.io.File
 import xyz.oribuin.skyblock.Skyblock
+import java.io.File
 
 class ConfigManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {

@@ -47,7 +47,7 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
                 "border" -> {
                     if (sender !is Player)
                         return
-                    
+
                     val member = IslandMember(plugin, sender.uniqueId)
                     val craftPlayer = sender as CraftPlayer
 

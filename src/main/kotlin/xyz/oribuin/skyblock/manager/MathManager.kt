@@ -4,7 +4,7 @@ import org.bukkit.Location
 import xyz.oribuin.skyblock.Skyblock
 
 // I suck at maths so this is required because i will easily forget what im doing
-open class MathManager(plugin: Skyblock): Manager(plugin) {
+open class MathManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
         // Unused
     }

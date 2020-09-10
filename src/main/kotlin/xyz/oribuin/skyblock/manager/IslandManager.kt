@@ -112,13 +112,13 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
             val dataManager = plugin.getManager(DataManager::class)
             dataManager.connector?.connect { connection ->
                 connection.prepareStatement("SELECT COUNT(*) FROM ${tablePrefix}islands").use { statement ->
-                    val result = statement.executeQuery();
+                    val result = statement.executeQuery()
                     result.next()
                     field = result.getInt(1)
                 }
             }
 
-            return field;
+            return field
         }
 
     fun isOnOwnIsland(player: Player): Boolean {
