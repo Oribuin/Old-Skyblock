@@ -39,7 +39,7 @@ class CmdBorder(private val plugin: Skyblock, command: OriCommand) : SubCommand(
         worldBorder.world = (island.center.world as CraftWorld).handle
 
         worldBorder.warningDistance = 0
-        worldBorder.warningDistance = 0
+        worldBorder.warningTime = 0
 
         worldBorder.size = island.islandRange.toDouble()
         worldBorder.setCenter(island.center.x, island.center.z)
@@ -47,10 +47,7 @@ class CmdBorder(private val plugin: Skyblock, command: OriCommand) : SubCommand(
         craftPlayer.handle.playerConnection.sendPacket(PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE))
 
         msg.sendActionMessage(sender, "$prefix &bNow displaying Island Border")
-
-       Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
-            msg.sendActionMessage(sender, "<r:0.7:l>On Island is currently: ${member.onIsland(island)}")
-        }, 0, 1)
+        Bukkit.
     }
 
     private fun getBlocks(start: Block, radius: Int): List<Block> {
