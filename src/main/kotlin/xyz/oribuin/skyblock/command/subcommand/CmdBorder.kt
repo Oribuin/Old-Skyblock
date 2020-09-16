@@ -47,7 +47,6 @@ class CmdBorder(private val plugin: Skyblock, command: OriCommand) : SubCommand(
         craftPlayer.handle.playerConnection.sendPacket(PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE))
 
         msg.sendActionMessage(sender, "$prefix &bNow displaying Island Border")
-        Bukkit.
     }
 
     private fun getBlocks(start: Block, radius: Int): List<Block> {
