@@ -6,7 +6,8 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import xyz.oribuin.skyblock.command.CmdIsland
 import xyz.oribuin.skyblock.command.OriCommand
-import xyz.oribuin.skyblock.listener.GeneralListeners
+import xyz.oribuin.skyblock.listener.BlockListeners
+import xyz.oribuin.skyblock.listener.PlayerListeners
 import xyz.oribuin.skyblock.manager.*
 import xyz.oribuin.skyblock.util.FileUtils
 import kotlin.reflect.KClass
@@ -31,7 +32,11 @@ class Skyblock : JavaPlugin() {
         this.registerCommands(CmdIsland(this))
 
         // Register plugin listeners
-        this.registerListeners(GeneralListeners(this))
+        this.registerListeners(
+                BlockListeners(this),
+
+                PlayerListeners(this)
+        )
 
         this.reload()
         this.saveDefaultConfig()

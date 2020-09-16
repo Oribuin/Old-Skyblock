@@ -3,6 +3,7 @@ package xyz.oribuin.skyblock.island
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import xyz.oribuin.skyblock.Skyblock
+import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.DataManager
 import java.util.*
 
@@ -60,6 +61,14 @@ class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {
         return island
     }
 
+    fun onIsland(island: Island): Boolean {
+        val player = Bukkit.getPlayer(uuid) ?: return false
+
+        if (player.world != Bukkit.getWorld(ConfigManager.Setting.WORLD.string))
+            return false
+
+        return (island.center.world ?: return false).getNearbyEntities(island.center, island.islandRange.toDouble() / 2, 800.0, island.islandRange.toDouble() / 2).contains(player)
+    }
 
     val player: OfflinePlayer = Bukkit.getOfflinePlayer(uuid)
 }

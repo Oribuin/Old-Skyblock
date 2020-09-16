@@ -1,125 +1,24 @@
 package xyz.oribuin.skyblock.command
 
-import net.minecraft.server.v1_16_R2.PacketPlayOutWorldBorder
-import net.minecraft.server.v1_16_R2.WorldBorder
 import org.bukkit.command.CommandSender
-import org.bukkit.craftbukkit.v1_16_R2.entity.CraftPlayer
-import org.bukkit.entity.Player
 import org.bukkit.util.StringUtil
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.island.IslandMember
-import xyz.oribuin.skyblock.manager.ConfigManager
-import xyz.oribuin.skyblock.manager.IslandManager
-import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.menu.CreateIslandMenu
-import xyz.oribuin.skyblock.util.HexUtils
-import xyz.oribuin.skyblock.util.StringPlaceholders
-import java.util.*
-import kotlin.collections.ArrayList
+import xyz.oribuin.skyblock.command.subcommand.CmdBorder
+import xyz.oribuin.skyblock.command.subcommand.CmdCreate
+import xyz.oribuin.skyblock.command.subcommand.CmdReload
+import xyz.oribuin.skyblock.command.subcommand.CmdTeleport
 
 class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
+    private val subcommands = mutableListOf<SubCommand>()
 
     override fun executeCommand(sender: CommandSender, args: Array<String>) {
 
-        if (args.size == 1) {
-            when (args[0].toLowerCase()) {
-                "reload" -> {
-                    this.reload(sender)
-                }
-
-                "go", "teleport" -> {
-                    if (sender !is Player)
-                        return
-
-                    val member = IslandMember(plugin, sender.uniqueId)
-                    member.getIsland()?.center?.let { sender.teleport(it) }
-                }
-
-                "delete" -> {
-                    if (sender !is Player)
-                        return
-
-                    val member = IslandMember(plugin, sender.uniqueId)
-                    sender.sendMessage(HexUtils.colorify("<rainbow:0.7:l>Now deleting the island, lord what have you done. You're fucked..."))
-                    member.getIsland()?.let { plugin.getManager(IslandManager::class).deleteIsland(it) }
-                }
-
-                "border" -> {
-                    if (sender !is Player)
-                        return
-
-                    val member = IslandMember(plugin, sender.uniqueId)
-                    val craftPlayer = sender as CraftPlayer
-
-                    val worldBorder = WorldBorder()
-
-                    val packet = PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE)
-                    craftPlayer.handle.playerConnection.sendPacket(packet)
-                }
+        for (cmd in subcommands) {
+            if (args.isNotEmpty() && cmd.names.contains(args[0].toLowerCase())) {
+                cmd.executeArgument(sender, args)
+                break
             }
         }
-
-        if (args.size >= 2) {
-            when (args[0].toLowerCase()) {
-                "create" -> {
-                    this.createIsland(sender, args)
-                }
-            }
-        }
-    }
-
-    private fun createIsland(sender: CommandSender, args: Array<String>) {
-        val cooldowns: MutableMap<UUID, Long> = HashMap()
-
-        val msg = plugin.getManager(MessageManager::class)
-
-        if (sender !is Player) {
-            msg.sendMessage(sender, "player-only")
-            return
-        }
-
-        val member = IslandMember(plugin, sender.uniqueId)
-
-        /*
-        if (member.hasIsland || member.islandOwner) {
-            msg.sendMessage(sender, "you-have-island")
-            return
-        }
-
-         */
-
-        if (cooldowns.containsKey(sender.uniqueId)) {
-            val secondsLeft = (cooldowns[sender.uniqueId]
-                    ?: return).div(1000).plus(ConfigManager.Setting.CMD_ISLAND_CREATE_COOLDOWN.long).minus(System.currentTimeMillis().div(1000))
-
-            if (secondsLeft > 0) {
-                msg.sendMessage(sender, "cooldown", StringPlaceholders.single("cooldown", secondsLeft))
-                return
-            }
-        }
-
-        //cooldowns[sender.uniqueId] = System.currentTimeMillis()
-
-        if (args.size < 2) {
-            msg.sendMessage(sender, "invalid-arguments")
-            return
-        }
-
-        val islandName = java.lang.String.join(" ", *args).substring(args[0].length + 1)
-        CreateIslandMenu(plugin, sender, islandName).openMenu()
-    }
-
-    private fun reload(sender: CommandSender) {
-        val messageManager = plugin.getManager(MessageManager::class)
-
-        if (!sender.hasPermission("skyblock.reload")) {
-            messageManager.sendMessage(sender, "invalid-permission")
-            return
-        }
-
-
-        this.plugin.reload()
-        messageManager.sendMessage(sender, "reload", StringPlaceholders.single("version", this.plugin.description.version))
     }
 
     override fun tabComplete(sender: CommandSender, args: Array<String>): List<String>? {
@@ -156,5 +55,9 @@ class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
         }
 
         return suggestions
+    }
+
+    override fun addSubCommands() {
+        subcommands.addAll(listOf(CmdBorder(plugin, this), CmdCreate(plugin, this), CmdReload(plugin, this), CmdTeleport(plugin, this)))
     }
 }
