@@ -3,16 +3,12 @@ package xyz.oribuin.skyblock.manager
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.CommandSender
-import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.hook.PlaceholderAPIHook
-import xyz.oribuin.skyblock.util.FileUtils.createFile
 import xyz.oribuin.skyblock.util.HexUtils.colorify
 import xyz.oribuin.skyblock.util.StringPlaceholders
 import xyz.oribuin.skyblock.util.StringPlaceholders.Companion.empty
-import java.io.File
 
 class MessageManager(plugin: Skyblock) : Manager(plugin) {
 

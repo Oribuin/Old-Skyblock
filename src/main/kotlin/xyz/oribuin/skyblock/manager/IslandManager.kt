@@ -23,10 +23,41 @@ import java.util.*
 
 class IslandManager(plugin: Skyblock) : Manager(plugin) {
     val players = mutableMapOf<UUID, Island>()
+    val islands = mutableSetOf<Island>()
 
 
     override fun reload() {
-        // Unused
+        this.islands.clear()
+        this.registerIslands()
+    }
+
+    private fun registerIslands() {
+        val data = plugin.getManager(DataManager::class)
+
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, Runnable {
+            data.connector?.connect { connection ->
+                val query = "SELECT * FROM islands"
+
+                connection.prepareStatement(query).use { statement ->
+                    val result = statement.executeQuery()
+                    while (result.next()) {
+                        val island = Island(result.getInt("id"), result.getString("name"), Location(Bukkit.getWorld(ConfigManager.Setting.WORLD.string), result.getDouble("center_x"), result.getDouble("center_y"), result.getDouble("center_z")), UUID.fromString(result.getString("owner")), result.getInt("range"))
+
+                        if (!islands.contains(island)) {
+                            islands.add(island)
+
+                            val count = islands.stream().filter { x -> x == island }.count()
+
+                            Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable {
+                                while (count > 1) {
+                                    islands.stream().filter { x -> x == island }.forEach { x -> islands.remove(x) }
+                                }
+                            }, 0, 3)
+                        }
+                    }
+                }
+            }
+        }, 10)
     }
 
     override fun disable() {
@@ -42,6 +73,8 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         val player = Bukkit.getPlayer(owner)
         player?.let { plugin.getManager(DataManager::class).createUser(it, island) }
         player?.teleport(island.spawnPoint)
+
+        islands.add(island)
         Bukkit.getPluginManager().callEvent(IslandCreateEvent(island))
         return island
     }
@@ -73,6 +106,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
 
         // Delete island from database
         plugin.getManager(DataManager::class).deleteIslandData(island)
+        islands.remove(island)
         Bukkit.getPluginManager().callEvent(IslandDeleteEvent(island))
     }
 
@@ -130,6 +164,21 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         val island = member.getIsland() ?: return false
 
         return island.center.world?.getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble())?.contains(player)!!
+    }
+
+    fun getIslandOn(player: Player): Island? {
+        if (player.world != Bukkit.getWorld(ConfigManager.Setting.WORLD.string))
+            return null
+
+        var isl: Island? = null
+
+        for (island in islands) {
+            if (!(island.center.world ?: return null).getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble()).contains(player)) {
+                isl = island
+            }
+        }
+
+        return isl
     }
 
     private val tablePrefix: String

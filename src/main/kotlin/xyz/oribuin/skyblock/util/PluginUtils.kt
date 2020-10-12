@@ -1,7 +1,6 @@
 package xyz.oribuin.skyblock.util
 
 import org.bukkit.Bukkit
-import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.manager.ConfigManager
 import java.text.SimpleDateFormat

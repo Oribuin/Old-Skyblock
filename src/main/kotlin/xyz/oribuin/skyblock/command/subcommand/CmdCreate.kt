@@ -1,7 +1,5 @@
 package xyz.oribuin.skyblock.command.subcommand
 
-import org.bukkit.Location
-import org.bukkit.block.Block
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock

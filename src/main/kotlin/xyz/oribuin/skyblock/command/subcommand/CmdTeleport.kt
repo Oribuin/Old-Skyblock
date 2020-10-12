@@ -7,7 +7,6 @@ import xyz.oribuin.skyblock.command.OriCommand
 import xyz.oribuin.skyblock.command.SubCommand
 import xyz.oribuin.skyblock.island.IslandMember
 import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.util.PluginUtils
 import xyz.oribuin.skyblock.util.PluginUtils.prefix
 
 class CmdTeleport(private val plugin: Skyblock, command: OriCommand) : SubCommand(command, "go", "teleport") {
@@ -31,7 +30,7 @@ class CmdTeleport(private val plugin: Skyblock, command: OriCommand) : SubComman
             return
         }
 
-        member.player.player?.teleport((member.getIsland()?: return).spawnPoint)
+        member.player.player?.teleport((member.getIsland() ?: return).spawnPoint)
         msg.sendActionMessage(sender, "&bWelcome to your Island!")
     }
 }

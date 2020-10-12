@@ -23,7 +23,7 @@ class BlockListeners(private val plugin: Skyblock) : Listener {
         if (!member.hasIsland)
             return
 
-        if (!member.onIsland(member.getIsland()?: return)) {
+        if (!member.onIsland(member.getIsland() ?: return)) {
             msg.sendActionMessage(event.player, "listener-messages.cant-break-block")
             event.isCancelled = true
         }
@@ -38,7 +38,7 @@ class BlockListeners(private val plugin: Skyblock) : Listener {
         if (!member.hasIsland)
             return
 
-        if (!member.onIsland(member.getIsland()?: return)) {
+        if (!member.onIsland(member.getIsland() ?: return)) {
             msg.sendActionMessage(event.player, "listener-messages.cant-place-block")
             event.isCancelled = true
         }

@@ -2,9 +2,7 @@ package xyz.oribuin.skyblock.command.subcommand
 
 import net.minecraft.server.v1_16_R2.PacketPlayOutWorldBorder
 import net.minecraft.server.v1_16_R2.WorldBorder
-import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.Particle
 import org.bukkit.block.Block
 import org.bukkit.command.CommandSender
 import org.bukkit.craftbukkit.v1_16_R2.CraftWorld
@@ -31,22 +29,7 @@ class CmdBorder(private val plugin: Skyblock, command: OriCommand) : SubCommand(
             return
         }
 
-        val member = IslandMember(plugin, sender.uniqueId)
-        val craftPlayer = sender as CraftPlayer
-        val island = member.getIsland() ?: return
-
-        val worldBorder = WorldBorder()
-        worldBorder.world = (island.center.world as CraftWorld).handle
-
-        worldBorder.warningDistance = 0
-        worldBorder.warningTime = 0
-
-        worldBorder.size = island.islandRange.toDouble()
-        worldBorder.setCenter(island.center.x, island.center.z)
-
-        craftPlayer.handle.playerConnection.sendPacket(PacketPlayOutWorldBorder(worldBorder, PacketPlayOutWorldBorder.EnumWorldBorderAction.INITIALIZE))
-
-        msg.sendActionMessage(sender, "$prefix &bNow displaying Island Border")
+        msg.sendActionMessage(sender, "$prefix &bThis does nothing lol")
     }
 
     private fun getBlocks(start: Block, radius: Int): List<Block> {

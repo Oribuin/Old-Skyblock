@@ -7,7 +7,7 @@ import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.DataManager
 import java.util.*
 
-class IslandMember(private val plugin: Skyblock, private val uuid: UUID) {
+class IslandMember(plugin: Skyblock, private val uuid: UUID) {
 
     private val data = plugin.getManager(DataManager::class)
 

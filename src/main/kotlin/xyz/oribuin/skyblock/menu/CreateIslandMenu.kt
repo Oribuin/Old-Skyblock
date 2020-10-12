@@ -105,6 +105,7 @@ class CreateIslandMenu(private val plugin: Skyblock, private val player: Player,
                     val pplayer = event.whoClicked as Player
 
                     val island = plugin.getManager(IslandManager::class).createIsland(islandName, name, pplayer.uniqueId, ConfigManager.Setting.SETTINGS_SIZE.int)
+                    plugin.getManager(IslandManager::class).islands.add(island)
 
                     plugin.getManager(MessageManager::class).sendMessage(pplayer, "commands.created-island", StringPlaceholders.builder("island_name", island.name).addPlaceholder("island_type", StringUtils.capitalize(name)).build())
 

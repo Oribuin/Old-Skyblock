@@ -10,6 +10,8 @@ import xyz.oribuin.skyblock.listener.BlockListeners
 import xyz.oribuin.skyblock.listener.PlayerListeners
 import xyz.oribuin.skyblock.manager.*
 import xyz.oribuin.skyblock.util.FileUtils
+import xyz.oribuin.skyblock.util.HexUtils
+import xyz.oribuin.skyblock.util.HexUtils.colorify
 import kotlin.reflect.KClass
 
 class Skyblock : JavaPlugin() {
@@ -23,6 +25,7 @@ class Skyblock : JavaPlugin() {
     override fun onEnable() {
         this.getManager(ConfigManager::class)
         this.getManager(DataManager::class)
+        this.getManager(BorderManager::class)
         this.getManager(HookManager::class)
         this.getManager(IslandManager::class)
         this.getManager(MessageManager::class)
@@ -42,15 +45,13 @@ class Skyblock : JavaPlugin() {
         this.saveDefaultConfig()
         createSchematics("desert", "ice", "default", "mesa", "mushroom", "nether", "plains")
 
-        /*
         Bukkit.getScheduler().runTaskTimer(this, Runnable {
             Bukkit.getOnlinePlayers().forEach { player ->
                 val islandManager = getManager(IslandManager::class)
 
-                player.sendMessage(HexUtils.colorify("<r:0.5>Is on island: ${islandManager.isOnOwnIsland(player)}"))
+                player.sendMessage(colorify("<r:0.5>Is on island: ${(islandManager.getIslandOn(player)?: return@forEach).name}"))
             }
         }, 0, 1)
-         */
     }
 
     private fun registerCommands(vararg commands: OriCommand) {
