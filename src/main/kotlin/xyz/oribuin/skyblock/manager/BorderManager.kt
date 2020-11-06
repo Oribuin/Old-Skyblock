@@ -21,15 +21,13 @@ class BorderManager(plugin: Skyblock) : Manager(plugin) {
     }
 
     private fun scheduleBorderTask(): BukkitTask {
-        val task = Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
+        return Bukkit.getScheduler().runTaskTimer(plugin, Runnable {
             Bukkit.getOnlinePlayers().forEach { player ->
                 val islandManager = plugin.getManager(IslandManager::class)
 
-                this.playBlueBorder(player, islandManager.getIslandOn(player)?: return@Runnable)
+                playBlueBorder(player, islandManager.getIslandOn(player)?: return@Runnable)
             }
         }, 0, 10)
-
-        return task
     }
 
     private fun playBlueBorder(player: Player, island: Island) {
