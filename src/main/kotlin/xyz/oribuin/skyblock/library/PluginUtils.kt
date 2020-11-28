@@ -1,10 +1,14 @@
 package xyz.oribuin.skyblock.library
 
 import org.apache.commons.lang.StringUtils
+import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
+import org.bukkit.scheduler.BukkitTask
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.function.Consumer
 
 object PluginUtils {
     fun formatTime(time: Long): String {
@@ -30,5 +34,10 @@ object PluginUtils {
             return "#FFFFFF"
 
         return "#${String.format("%02x%02x%02x", color.red, color.green, color.blue)}"
+    }
+
+    @JvmStatic
+    fun createDelay(plugin: Plugin, delay: Int, task: Consumer<BukkitTask>) {
+        Bukkit.getScheduler().runTaskLater(plugin, task, (delay * 20).toLong())
     }
 }

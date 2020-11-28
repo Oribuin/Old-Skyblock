@@ -3,11 +3,10 @@ package xyz.oribuin.skyblock.command.subcommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.command.OriCommand
 import xyz.oribuin.skyblock.command.SubCommand
 import xyz.oribuin.skyblock.island.IslandMember
+import xyz.oribuin.skyblock.library.OriCommand
 import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.util.PluginUtils.prefix
 
 class CmdTeleport(private val plugin: Skyblock, command: OriCommand) : SubCommand(command, "go", "teleport") {
     override fun executeArgument(sender: CommandSender, args: Array<String>) {

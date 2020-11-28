@@ -2,6 +2,7 @@ package xyz.oribuin.skyblock.manager
 
 import org.bukkit.Location
 import xyz.oribuin.skyblock.Skyblock
+import xyz.oribuin.skyblock.library.Manager
 
 // I suck at maths so this is required because i will easily forget what im doing
 open class MathManager(plugin: Skyblock) : Manager(plugin) {

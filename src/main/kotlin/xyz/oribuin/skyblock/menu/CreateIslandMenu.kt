@@ -17,8 +17,6 @@ import xyz.oribuin.skyblock.library.StringPlaceholders
 import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.IslandManager
 import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.util.HexUtils
-import xyz.oribuin.skyblock.util.StringPlaceholders
 
 class CreateIslandMenu(private val plugin: Skyblock, private val player: Player, private val islandName: String) {
     private val guiFramework = GuiFramework.instantiate(plugin)

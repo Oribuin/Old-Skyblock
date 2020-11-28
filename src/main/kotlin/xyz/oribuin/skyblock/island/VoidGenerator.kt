@@ -3,7 +3,7 @@ package xyz.oribuin.skyblock.island
 import org.bukkit.World
 import org.bukkit.block.Biome
 import org.bukkit.generator.ChunkGenerator
-import xyz.oribuin.skyblock.util.NMSUtil
+import xyz.oribuin.skyblock.library.NMSUtil
 import java.util.*
 
 /**

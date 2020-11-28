@@ -3,12 +3,11 @@ package xyz.oribuin.skyblock.command.subcommand
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.command.OriCommand
 import xyz.oribuin.skyblock.command.SubCommand
+import xyz.oribuin.skyblock.library.OriCommand
 import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.MessageManager
 import xyz.oribuin.skyblock.menu.CreateIslandMenu
-import xyz.oribuin.skyblock.util.PluginUtils.prefix
 import java.util.*
 
 class CmdCreate(private val plugin: Skyblock, command: OriCommand) : SubCommand(command, "create") {

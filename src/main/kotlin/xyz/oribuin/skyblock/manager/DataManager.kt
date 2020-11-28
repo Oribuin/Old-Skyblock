@@ -8,7 +8,8 @@ import xyz.oribuin.skyblock.database.DatabaseConnector
 import xyz.oribuin.skyblock.database.MySQLConnector
 import xyz.oribuin.skyblock.database.SQLiteConnector
 import xyz.oribuin.skyblock.island.Island
-import xyz.oribuin.skyblock.util.FileUtils.createFile
+import xyz.oribuin.skyblock.library.FileUtils.createFile
+import xyz.oribuin.skyblock.library.Manager
 import java.sql.Connection
 import java.util.*
 

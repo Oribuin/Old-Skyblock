@@ -1,17 +1,15 @@
 package xyz.oribuin.skyblock
 
 import org.bukkit.Bukkit
-import org.bukkit.event.Listener
 import xyz.oribuin.skyblock.command.CmdIsland
-import xyz.oribuin.skyblock.command.OriCommand
+import xyz.oribuin.skyblock.library.FileUtils
 import xyz.oribuin.skyblock.library.HexUtils.colorify
 import xyz.oribuin.skyblock.library.OriPlugin
 import xyz.oribuin.skyblock.listener.BlockListeners
 import xyz.oribuin.skyblock.listener.PlayerListeners
 import xyz.oribuin.skyblock.manager.*
-import kotlin.reflect.KClass
 
-class Skyblock : OriPlugin {
+class Skyblock : OriPlugin() {
     override fun enablePlugin() {
         this.getManager(ConfigManager::class)
         this.getManager(DataManager::class)
@@ -42,6 +40,11 @@ class Skyblock : OriPlugin {
                 player.sendMessage(colorify("<r:0.5>Is on island: ${(islandManager.getIslandOn(player)?: return@forEach).name}"))
             }
         }, 0, 1)
+    }
+
+    override fun disablePlugin() {
+        // Unused
+
     }
 
     private fun createSchematics(vararg schems: String) {

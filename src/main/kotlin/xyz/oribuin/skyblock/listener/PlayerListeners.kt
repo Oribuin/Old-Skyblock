@@ -11,6 +11,7 @@ import org.bukkit.event.player.*
 import org.bukkit.inventory.EquipmentSlot
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.island.IslandMember
+import xyz.oribuin.skyblock.library.PluginUtils
 import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.MessageManager
 
@@ -151,7 +152,7 @@ class PlayerListeners(private val plugin: Skyblock) : Listener {
             return
 
         if (!member.onIsland(member.getIsland() ?: return)) {
-            PluginUtils.createDelay(event.entity as Player, 120, { msg.sendActionMessage(event.entity as Player, "listener-messages.cant-pickup-item") }, null)
+            PluginUtils.createDelay(plugin, 120) { msg.sendActionMessage(event.entity as Player, "listener-messages.cant-pickup-item") }
             event.isCancelled = true
         }
     }

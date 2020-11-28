@@ -6,9 +6,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.hook.PlaceholderAPIHook
-import xyz.oribuin.skyblock.util.HexUtils.colorify
-import xyz.oribuin.skyblock.util.StringPlaceholders
-import xyz.oribuin.skyblock.util.StringPlaceholders.Companion.empty
+import xyz.oribuin.skyblock.library.HexUtils.colorify
+import xyz.oribuin.skyblock.library.Manager
+import xyz.oribuin.skyblock.library.StringPlaceholders
+import xyz.oribuin.skyblock.library.StringPlaceholders.Companion.empty
 
 class MessageManager(plugin: Skyblock) : Manager(plugin) {
 

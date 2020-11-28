@@ -6,7 +6,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
-
 group 'xyz.oribuin'
 version '1.0'
 compileJava.options.encoding = 'UTF-8'
@@ -63,7 +62,7 @@ compileKotlin {
 }
 
 shadowJar {
-    archiveFileName = 'SkyblockCore-' + project.property('version') + '.jar'
+    archiveFileName = 'Skyblock-' + project.property('version') + '.jar'
     archiveClassifier.set(null)
 
     relocate('org.jetbrains', 'xyz.oribuin.skyblock.libs.jetbrains')

@@ -5,10 +5,9 @@ import org.bukkit.block.Block
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.command.OriCommand
 import xyz.oribuin.skyblock.command.SubCommand
+import xyz.oribuin.skyblock.library.OriCommand
 import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.util.PluginUtils.prefix
 
 class CmdBorder(private val plugin: Skyblock, command: OriCommand) : SubCommand(command, "border") {
     override fun executeArgument(sender: CommandSender, args: Array<String>) {

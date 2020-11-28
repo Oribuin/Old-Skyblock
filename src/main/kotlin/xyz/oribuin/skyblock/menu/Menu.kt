@@ -3,7 +3,7 @@ package xyz.oribuin.skyblock.menu
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.util.FileUtils.createMenuFile
+import xyz.oribuin.skyblock.library.FileUtils.createMenuFile
 import java.io.File
 
 abstract class Menu(private val plugin: Skyblock, private val guiName: String) {

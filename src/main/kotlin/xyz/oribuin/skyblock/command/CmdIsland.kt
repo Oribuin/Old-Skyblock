@@ -7,8 +7,9 @@ import xyz.oribuin.skyblock.command.subcommand.CmdBorder
 import xyz.oribuin.skyblock.command.subcommand.CmdCreate
 import xyz.oribuin.skyblock.command.subcommand.CmdReload
 import xyz.oribuin.skyblock.command.subcommand.CmdTeleport
+import xyz.oribuin.skyblock.library.OriCommand
 
-class CmdIsland(override val plugin: Skyblock) : OriCommand(plugin, "island") {
+class CmdIsland(plugin: Skyblock) : OriCommand(plugin, "island") {
     private val subcommands = mutableListOf<SubCommand>()
 
     override fun executeCommand(sender: CommandSender, args: Array<String>) {

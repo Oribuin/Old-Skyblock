@@ -7,7 +7,8 @@ import org.bukkit.WorldType
 import org.bukkit.generator.ChunkGenerator
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.island.VoidGenerator
-import xyz.oribuin.skyblock.util.FileUtils
+import xyz.oribuin.skyblock.library.FileUtils
+import xyz.oribuin.skyblock.library.Manager
 
 class WorldManager(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {

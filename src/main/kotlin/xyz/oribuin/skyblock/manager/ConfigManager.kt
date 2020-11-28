@@ -2,6 +2,7 @@ package xyz.oribuin.skyblock.manager
 
 import org.bukkit.configuration.file.FileConfiguration
 import xyz.oribuin.skyblock.Skyblock
+import xyz.oribuin.skyblock.library.Manager
 import java.io.File
 
 class ConfigManager(plugin: Skyblock) : Manager(plugin) {

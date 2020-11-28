@@ -1,6 +1,7 @@
 package xyz.oribuin.skyblock.manager
 
 import xyz.oribuin.skyblock.Skyblock
+import xyz.oribuin.skyblock.library.Manager
 import xyz.oribuin.skyblock.menu.Menu
 import java.util.*
 import java.util.function.Consumer

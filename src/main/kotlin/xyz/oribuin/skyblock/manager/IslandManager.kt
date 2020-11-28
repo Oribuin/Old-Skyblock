@@ -16,6 +16,7 @@ import xyz.oribuin.skyblock.event.IslandCreateEvent
 import xyz.oribuin.skyblock.event.IslandDeleteEvent
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.island.IslandMember
+import xyz.oribuin.skyblock.library.Manager
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -156,7 +157,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         }
 
     fun isOnOwnIsland(player: Player): Boolean {
-        val member = IslandMember(plugin, player.uniqueId)
+        val member = IslandMember(plugin as Skyblock, player.uniqueId)
 
         if (!member.hasIsland && !member.islandOwner)
             return false
@@ -173,7 +174,7 @@ class IslandManager(plugin: Skyblock) : Manager(plugin) {
         var isl: Island? = null
 
         for (island in islands) {
-            if (!(island.center.world ?: return null).getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble()).contains(player)) {
+            if ((island.center.world ?: return null).getNearbyEntities(island.center, island.islandRange.toDouble(), 256.0, island.islandRange.toDouble()).contains(player)) {
                 isl = island
             }
         }

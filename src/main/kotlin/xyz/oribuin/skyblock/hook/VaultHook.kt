@@ -4,7 +4,7 @@ import net.milkbowl.vault.economy.Economy
 import net.milkbowl.vault.permission.Permission
 import org.bukkit.Bukkit
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.manager.Manager
+import xyz.oribuin.skyblock.library.Manager
 
 class VaultHook(plugin: Skyblock) : Manager(plugin) {
     override fun reload() {
