@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
-    id 'me.bristermitten.pdm' version '0.0.29'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
 
@@ -30,23 +30,23 @@ repositories {
 
 dependencies {
     // Overlord language
-    pdm "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    pdm "org.jetbrains.kotlin:kotlin-reflect:1.4.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.4.10"
 
     // Spigot Stuff
-    compileOnly 'org.spigotmc:spigot:1.16.2'
+    compileOnly 'org.spigotmc:spigot:1.16.4'
     compileOnly 'me.clip:placeholderapi:2.10.9'
 
     // Frameworks
-    pdm 'dev.rosewood:guiframework:1.1.1'
+    implementation 'dev.rosewood:guiframework:1.1.1'
 
     // Plugin Hooks
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.1.0-SNAPSHOT'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
 
     // Misc
-    pdm 'com.zaxxer:HikariCP:3.4.5'
-    pdm 'de.tr7zw:item-nbt-api:2.5.0'
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'de.tr7zw:item-nbt-api:2.5.0'
 }
 
 processResources {
@@ -62,4 +62,13 @@ compileKotlin {
     }
 }
 
-jar.dependsOn project.tasks.getByName('pdm')
+shadowJar {
+    archiveFileName = 'SkyblockCore-' + project.property('version') + '.jar'
+    archiveClassifier.set(null)
+
+    relocate('org.jetbrains', 'xyz.oribuin.skyblock.libs.jetbrains')
+    relocate('org.intellij', 'xyz.oribuin.skyblock.libs.intellij')
+    relocate('net.wesjd.anvilgui', 'xyz.oribuin.skyblock.libs.anvilgui')
+    relocate('kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
+    relocate('dev.rosewood.guiframework', 'xyz.oribuin.skyblock.libs.guiframework')
+}

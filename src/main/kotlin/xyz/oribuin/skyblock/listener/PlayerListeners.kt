@@ -13,7 +13,6 @@ import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.island.IslandMember
 import xyz.oribuin.skyblock.manager.ConfigManager
 import xyz.oribuin.skyblock.manager.MessageManager
-import xyz.oribuin.skyblock.util.PluginUtils
 
 class PlayerListeners(private val plugin: Skyblock) : Listener {
     private val msg = plugin.getManager(MessageManager::class)
