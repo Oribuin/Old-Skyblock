@@ -26,6 +26,7 @@ class CmdIsland(private val plugin: Skyblock) : Command(plugin) {
 
         if (args.isNotEmpty()) {
 
+            // TODO, Move commands to SubCommands.
             when (args[0].toLowerCase()) {
                 "border" -> {
                     val island = this.plugin.getManager(DataManager::class.java).getIsland(player)
@@ -60,6 +61,7 @@ class CmdIsland(private val plugin: Skyblock) : Command(plugin) {
 
         }
 
+        // TODO, Add GUI
     }
 
 }
