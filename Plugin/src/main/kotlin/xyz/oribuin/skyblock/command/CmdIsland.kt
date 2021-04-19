@@ -6,10 +6,11 @@ import org.bukkit.entity.Player
 import xyz.oribuin.orilibrary.command.Command
 import xyz.oribuin.orilibrary.libs.jetbrains.annotations.NotNull
 import xyz.oribuin.skyblock.Skyblock
-import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.manager.DataManager
-import xyz.oribuin.skyblock.manager.WorldManager
-import xyz.oribuin.skyblock.util.PluginUtils
+import xyz.oribuin.skyblock.manager.IslandManager
+import xyz.oribuin.skyblock.nms.BorderColor
+import xyz.oribuin.skyblock.nms.NMSAdapter
+import java.util.concurrent.CompletableFuture
 
 @Command.Info(
     name = "island",
@@ -26,20 +27,39 @@ class CmdIsland(private val plugin: Skyblock) : Command(plugin) {
         val player = sender as Player
 
         if (args.isNotEmpty()) {
-            val size = this.plugin.config.getInt("island-size")
-            val world = this.plugin.getManager(WorldManager::class.java).world
-            val data = this.plugin.getManager(DataManager::class.java)
 
-            val island = Island(PluginUtils.getNextId(data.islands.map { it.id }.toList()), player.uniqueId, PluginUtils.getNextIslandLocation(data.islands.size, world), args[0])
-            island.size = size
+            when (args[0].toLowerCase()) {
+                "border" -> {
+                    val island = this.plugin.getManager(DataManager::class.java).getIsland(player)
+                    if (island != null) {
+                        NMSAdapter.handler.sendWorldBorder(player, BorderColor.BLUE, island.size.toDouble(), island.location)
+                        println("Creating world border.")
+                        return
+                    }
 
-            this.plugin.getManager(DataManager::class.java).saveIsland(island)
-            island.location.block.type = Material.BEDROCK
+                    println("Player does not have island")
+                }
 
-            val loc = island.location.clone()
-            player.teleport(loc.add(0.0, 1.0, 0.0))
-            player.sendMessage("Welcome to your island.")
-            return
+                "teleport" -> {
+                    val island = this.plugin.getManager(DataManager::class.java).getIsland(player)
+                    if (island != null) {
+                        player.teleport(island.spawnPoint.clone().add(0.0, 1.0, 0.0))
+                        println("Teleporting to island.")
+                        return
+                    }
+
+                    println("Player does not have island")
+
+                }
+
+                else -> {
+                    println("Creating Island.")
+                    this.plugin.getManager(IslandManager::class.java).createIsland(player, args[0])
+
+                }
+
+            }
+
         }
 
     }

@@ -71,21 +71,18 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
                 }
 
+            }.thenRunAsync {
+                this.cacheMembers()
+                this.cacheIslands()
             }
         }
-
-        // Load members then load islands
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, Runnable {
-            CompletableFuture.runAsync { this.cacheMembers() }.thenRunAsync { this.cacheIslands() }
-        }, 20)
 
     }
 
     /**
-     * Create a new island and save it into SQL DB
+     * Saves an island into MySQL
      *
-     * @param owner The island owner.
-     * @param name  The island name.
+     * @param island The island.
      */
     fun saveIsland(island: Island) {
         val loc = island.location
@@ -151,7 +148,10 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
      */
     private fun cacheIslands() {
         val list = mutableListOf<Island>()
-        val world = this.plugin.getManager(WorldManager::class.java).world ?: return
+        val world = this.plugin.getManager(WorldManager::class.java).world
+
+        println(world == null)
+        this.islands.clear()
 
         CompletableFuture.runAsync {
 
@@ -180,14 +180,15 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
             }
 
-        }.thenRunAsync { this.islands.addAll(islands) }
+        }.thenRunAsync { this.islands.addAll(islands); this.plugin.logger.warning("Successfully cached (${islands.size}) islands.") }
 
     }
 
     /**
      * Cache all the members from the SQL DB
      */
-     fun cacheMembers() {
+    private fun cacheMembers() {
+        this.members.clear()
         val members = mutableListOf<Member>()
 
         CompletableFuture.runAsync {
@@ -198,7 +199,7 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
                     while (result.next()) members.add(Member(UUID.fromString(result.getString("user")), result.getInt("island")))
                 }
             }
-        }.thenRunAsync { this.members.addAll(members) }
+        }.thenRunAsync { this.members.addAll(members); this.plugin.logger.warning("Successfully cached (${members.size}) members.") }
 
     }
 

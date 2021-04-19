@@ -5,19 +5,24 @@ import org.bukkit.Bukkit
 import xyz.oribuin.orilibrary.OriPlugin
 import xyz.oribuin.skyblock.command.CmdIsland
 import xyz.oribuin.skyblock.manager.DataManager
+import xyz.oribuin.skyblock.manager.IslandManager
 import xyz.oribuin.skyblock.manager.WorldManager
+import xyz.oribuin.skyblock.nms.NMSAdapter
 
 class Skyblock : OriPlugin() {
 
     override fun enablePlugin() {
+
         // Check if server has vault
         if (!hasPlugin("Vault")) return
 
+        // Create the world
+       this.getManager(WorldManager::class.java).createWorld(this.config.getString("world-name") ?: "skyblock_islands")
+
         // Load Plugin Managers Asynchronously
         this.server.scheduler.runTaskAsynchronously(this, Runnable {
-
-            this.getManager(WorldManager::class.java)
             this.getManager(DataManager::class.java)
+            this.getManager(IslandManager::class.java)
 
         })
 
