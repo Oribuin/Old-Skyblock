@@ -1,8 +1,8 @@
 package xyz.oribuin.skyblock.manager
 
-import com.google.gson.Gson
 import org.bukkit.Bukkit
 import org.bukkit.Location
+import org.bukkit.OfflinePlayer
 import org.bukkit.scheduler.BukkitTask
 import xyz.oribuin.orilibrary.database.DatabaseConnector
 import xyz.oribuin.orilibrary.database.MySQLConnector
@@ -122,6 +122,11 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
     }
 
+    /**
+     * Save and cache all the island members.
+     *
+     * @param members The members to save
+     */
     private fun saveMembers(members: List<Member>) {
         async { _ ->
 
@@ -179,7 +184,10 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
     }
 
-    private fun cacheMembers() {
+    /**
+     * Cache all the members from the SQL DB
+     */
+     fun cacheMembers() {
         val members = mutableListOf<Member>()
 
         CompletableFuture.runAsync {
@@ -192,6 +200,17 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
             }
         }.thenRunAsync { this.members.addAll(members) }
 
+    }
+
+    /**
+     * Get an offline player's island.
+     *
+     * @param player The offline player
+     * @return A Nullable Island
+     */
+    fun getIsland(player: OfflinePlayer): Island? {
+        val member = this.members.find { it.user == player.uniqueId } ?: return null
+        return this.islands.find { it.id == member.island }
     }
 
     override fun disable() {
