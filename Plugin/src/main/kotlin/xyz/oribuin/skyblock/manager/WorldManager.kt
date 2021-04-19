@@ -11,7 +11,7 @@ import java.io.File
 
 class WorldManager(private val plugin: Skyblock) : Manager(plugin) {
 
-    private var world: World? = null
+    var world: World? = null
 
     override fun enable() {
         // Create World
@@ -29,16 +29,27 @@ class WorldManager(private val plugin: Skyblock) : Manager(plugin) {
 
     }
 
+    /**
+     * Create an empty world using the VoidGenerator
+     *
+     * @param name The name of the world.
+     */
     private fun createWorld(name: String) {
 
-        if (Bukkit.getWorld(name) == null) {
-            world = WorldCreator.name(name)
-                .type(WorldType.FLAT)
-                .environment(World.Environment.NORMAL)
-                .generateStructures(false)
-                .generator(VoidGenerator())
-                .createWorld()
-        }
+        // Create world synchronously because fuck spigot
+        this.plugin.server.scheduler.runTask(plugin, Runnable {
+
+            if (Bukkit.getWorld(name) == null) {
+                world = WorldCreator.name(name)
+                    .type(WorldType.FLAT)
+                    .environment(World.Environment.NORMAL)
+                    .generateStructures(false)
+                    .generator(VoidGenerator())
+                    .createWorld()
+            }
+
+        })
+
 
     }
 

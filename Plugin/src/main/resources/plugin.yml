@@ -1,0 +1,9 @@
+name: Skyblock
+main: xyz.oribuin.skyblock.Skyblock
+description: Skyblock Plugin by Ori
+api-version: '1.16'
+version: '1.0'
+author: Oribuin
+softdepend:
+  - Vault
+  - PlaceholderAPI

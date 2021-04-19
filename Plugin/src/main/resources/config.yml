@@ -1,0 +1,15 @@
+# PlayerWarps by Oribuin | Donate @ https://oribuin.xyz/donate
+# Join https://oribuin.xyz/support if you are experiencing issues!
+
+# Enable if you want to save everything in MySQL
+mysql:
+  enabled: false
+  host: localhost
+  port: 3306
+  dbname: mysql
+  username: Username
+  password: Password
+  ssl: true
+  table: oriskyblock
+
+world-name: skyblock_islands

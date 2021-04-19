@@ -14,8 +14,10 @@ class Skyblock : OriPlugin() {
 
         // Load Plugin Managers Asynchronously
         this.server.scheduler.runTaskAsynchronously(this, Runnable {
-            this.getManager(DataManager::class.java)
+
             this.getManager(WorldManager::class.java)
+            this.getManager(DataManager::class.java)
+
         })
 
         // Load Commands

@@ -1,5 +1,6 @@
 package xyz.oribuin.skyblock.manager
 
+import org.bukkit.Location
 import org.bukkit.scheduler.BukkitTask
 import xyz.oribuin.orilibrary.database.DatabaseConnector
 import xyz.oribuin.orilibrary.database.MySQLConnector
@@ -9,12 +10,13 @@ import xyz.oribuin.orilibrary.util.FileUtils
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.island.Member
+import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
 class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
     var islands = mutableListOf<Island>()
-    var members = mutableMapOf<Island, MutableList<Member>>()
+    var members = mutableListOf<Member>()
 
     var connector: DatabaseConnector? = null
     var tableName = this.plugin.config.getString("mysql.table") ?: "oriskyblock"
@@ -48,19 +50,49 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
     }
 
+    /**
+     * Create all the tables for the SQL Database and cache all the islands & users
+     */
     private fun loadIslands() {
+
         this.async {
 
-            var island: Island? = null
-
             this.connector?.connect { connection ->
-                arrayOf(
-                    "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, PRIMARY KEY(id))",
-                    "CREATE TABLE IF NOT EXISTS ${tableName}_members (user VARCHAR(50), island: "
+                val queries = arrayOf(
+                    "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, members VARCHAR(200)[] PRIMARY KEY(id))",
                 )
 
+                val statement = connection.createStatement()
+                queries.forEach { x -> statement.addBatch(x) }
+                statement.executeBatch()
+
             }
+
         }
+
+    }
+
+    /**
+     * Cache All the islands & members
+     */
+    private fun cacheIslands() {
+//        val list = mutableListOf<Island>()
+//        val world = this.plugin.getManager(WorldManager::class.java).world ?: return
+//
+//        CompletableFuture.runAsync {
+//            this.connector?.connect { connection ->
+//                connection.prepareStatement("SELECT * FROM ${tableName}_islands").use { preparedStatement ->
+//                    val result = preparedStatement.executeQuery()
+//
+//                    connection.createArrayOf("text")
+//                    while (result.next()) {
+//                        val islandLoc = Location(world, result.getDouble("loc_x"), result.getDouble("loc_y"), result.getDouble("loc_z"))
+//                        val spawnLoc = Location(world, result.getDouble("spawn_x", result.getString("spawn_y"), result.get))
+//                    }
+//                }
+//
+//            }
+//        }
 
     }
 

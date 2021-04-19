@@ -3,6 +3,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
 }
 
+configurations { childJars }
+
 allprojects {
     apply plugin: 'org.jetbrains.kotlin.jvm'
     apply plugin: 'java'
@@ -17,6 +19,8 @@ allprojects {
         mavenCentral()
         mavenLocal()
         jcenter()
+
+        flatDir { dirs 'libs' }
 
         maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
         maven { url 'https://repo.rosewooddev.io/repository/public/' }
@@ -34,18 +38,24 @@ dependencies {
     implementation project(':NMS-v1_16_R1')
     implementation project(':NMS-v1_16_R2')
     implementation project(':NMS-v1_16_R3')
+
+    subprojects.each { childJars project(it.path) }
 }
 
 shadowJar {
     archiveClassifier.set(null)
-    relocate('xyz.oribuin.orilibrary', 'xyz.oribuin.skyblock.libs.orilib')
     relocate('me.mattstudios', 'xyz.oribuin.skyblock.libs.mattstudios')
+    relocate('xyz.oribuin.orilibrary', 'xyz.oribuin.skyblock.libs.orilib')
+    relocate('kotlin', 'xyz.oribuin.skyblock.libs.kotlin')
+    relocate('org.intellij', 'xyz.oribuin.skyblock.libs.intellij')
+    relocate('org.jetbrains', 'xyz.oribuin.skyblock.libs.jetbrains')
+}
 
-    minimize {
-        subprojects.each {
-            exclude(project(it.path))
-        }
-    }
+jar {
+    dependsOn configurations.childJars
+
+    from { configurations.childJars.collect { zipTree(it) } }
+
 }
 
 build.dependsOn shadowJar
