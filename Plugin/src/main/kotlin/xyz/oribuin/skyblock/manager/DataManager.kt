@@ -59,7 +59,7 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
             this.connector?.connect { connection ->
                 val queries = arrayOf(
-                    "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, members VARCHAR(200)[] PRIMARY KEY(id))",
+                    "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, members TEXT[], PRIMARY KEY(id))",
                 )
 
                 val statement = connection.createStatement()
