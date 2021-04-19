@@ -1,6 +1,5 @@
 package xyz.oribuin.skyblock.command
 
-import org.bukkit.Material
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import xyz.oribuin.orilibrary.command.Command
@@ -10,7 +9,6 @@ import xyz.oribuin.skyblock.manager.DataManager
 import xyz.oribuin.skyblock.manager.IslandManager
 import xyz.oribuin.skyblock.nms.BorderColor
 import xyz.oribuin.skyblock.nms.NMSAdapter
-import java.util.concurrent.CompletableFuture
 
 @Command.Info(
     name = "island",
@@ -32,7 +30,7 @@ class CmdIsland(private val plugin: Skyblock) : Command(plugin) {
                 "border" -> {
                     val island = this.plugin.getManager(DataManager::class.java).getIsland(player)
                     if (island != null) {
-                        NMSAdapter.handler.sendWorldBorder(player, BorderColor.BLUE, island.size.toDouble(), island.location)
+                        NMSAdapter.handler.sendWorldBorder(player, BorderColor.BLUE, 5.0, island.location)
                         println("Creating world border.")
                         return
                     }

@@ -8,10 +8,22 @@ import xyz.oribuin.skyblock.manager.DataManager
 import xyz.oribuin.skyblock.manager.IslandManager
 import xyz.oribuin.skyblock.manager.WorldManager
 import xyz.oribuin.skyblock.nms.NMSAdapter
+import xyz.oribuin.skyblock.nms.NMSHandler
 
 class Skyblock : OriPlugin() {
 
     override fun enablePlugin() {
+
+        // Check NMS Version
+
+        if (!NMSAdapter.isValidVersion) {
+            val name = Bukkit.getServer().javaClass.getPackage().name
+            val version = name.substring(name.lastIndexOf('.') + 1)
+
+            this.logger.severe("OriSkyblock only supports 1.16 - 1.16.4, You are currently on $version. Disabling the plugin")
+            Bukkit.getPluginManager().disablePlugin(this)
+            return
+        }
 
         // Check if server has vault
         if (!hasPlugin("Vault")) return

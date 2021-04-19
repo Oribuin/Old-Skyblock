@@ -1,4 +1,4 @@
-package xyz.oribuin.skyblock.nms.v1_16_R1
+package xyz.oribuin.skyblock.nms.v1_16_R2
 
 import net.minecraft.server.v1_16_R2.PacketPlayOutWorldBorder
 import net.minecraft.server.v1_16_R2.WorldBorder
