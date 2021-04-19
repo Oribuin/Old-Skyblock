@@ -149,8 +149,6 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
     private fun cacheIslands() {
         val list = mutableListOf<Island>()
         val world = this.plugin.getManager(WorldManager::class.java).world
-
-        println(world == null)
         this.islands.clear()
 
         CompletableFuture.runAsync {
@@ -174,13 +172,14 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
 
                         // Add all Island Members
                         island.members = this.members.filter { member -> member.island == island.id }.toMutableList()
+
                         list.add(island)
                     }
                 }
 
             }
 
-        }.thenRunAsync { this.islands.addAll(islands); this.plugin.logger.warning("Successfully cached (${islands.size}) islands.") }
+        }.thenRunAsync { this.islands.addAll(list); this.plugin.logger.warning("Successfully cached (${islands.size}) islands.") }
 
     }
 
