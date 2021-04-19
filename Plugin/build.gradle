@@ -10,10 +10,10 @@ dependencies {
     implementation project(':NMS-Wrapper')
 
     // Referenced Dependencies
-    compileOnly 'org.spigotmc:spigot:1.16.4'
-    compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
-    compileOnly 'me.clip:placeholderapi:2.10.9'
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    shadow 'org.spigotmc:spigot:1.16.4'
+    shadow 'com.github.MilkBowl:VaultAPI:1.7'
+    shadow 'me.clip:placeholderapi:2.10.9'
+    shadow 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
 
     implementation fileTree(dir: 'libs', includes: ['*.jar'])
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'

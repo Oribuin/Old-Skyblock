@@ -1,5 +1,7 @@
 package xyz.oribuin.skyblock.manager
 
+import com.google.gson.Gson
+import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.scheduler.BukkitTask
 import xyz.oribuin.orilibrary.database.DatabaseConnector
@@ -10,6 +12,7 @@ import xyz.oribuin.orilibrary.util.FileUtils
 import xyz.oribuin.skyblock.Skyblock
 import xyz.oribuin.skyblock.island.Island
 import xyz.oribuin.skyblock.island.Member
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -47,7 +50,6 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
         }
 
         this.loadIslands()
-
     }
 
     /**
@@ -56,43 +58,139 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
     private fun loadIslands() {
 
         this.async {
+            CompletableFuture.runAsync {
+                this.connector?.connect { connection ->
+                    val queries = arrayOf(
+                        "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, PRIMARY KEY(id))",
+                        "CREATE TABLE IF NOT EXISTS ${tableName}_members (user VARCHAR(50), island INT, PRIMARY KEY(user))"
+                    )
 
-            this.connector?.connect { connection ->
-                val queries = arrayOf(
-                    "CREATE TABLE IF NOT EXISTS ${tableName}_islands (id INT, owner VARCHAR(50), name VARCHAR(200), loc_x DOUBLE, loc_y DOUBLE, loc_z DOUBLE, size INT, spawn_x DOUBLE, spawn_y DOUBLE, spawn_z DOUBLE, spawn_yaw FLOAT, spawn_pitch FLOAT, locked BOOLEAN, members TEXT[], PRIMARY KEY(id))",
-                )
+                    val statement = connection.createStatement()
+                    queries.forEach { x -> statement.addBatch(x) }
+                    statement.executeBatch()
 
-                val statement = connection.createStatement()
-                queries.forEach { x -> statement.addBatch(x) }
-                statement.executeBatch()
+                }
 
             }
+        }
+
+        // Load members then load islands
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, Runnable {
+            CompletableFuture.runAsync { this.cacheMembers() }.thenRunAsync { this.cacheIslands() }
+        }, 20)
+
+    }
+
+    /**
+     * Create a new island and save it into SQL DB
+     *
+     * @param owner The island owner.
+     * @param name  The island name.
+     */
+    fun saveIsland(island: Island) {
+        val loc = island.location
+        this.islands.removeIf { it.id == island.id }
+        this.islands.add(island)
+
+        async { _ ->
+            val query = "REPLACE INTO ${tableName}_islands (id, owner, name, loc_x, loc_y, loc_z, size, spawn_x, spawn_y, spawn_z, spawn_yaw, spawn_pitch, locked) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            this.connector?.connect { connection ->
+                connection.prepareStatement(query).use {
+                    it.setInt(1, island.id)
+                    it.setString(2, island.owner.toString())
+                    it.setString(3, island.name)
+                    it.setDouble(4, loc.x)
+                    it.setDouble(5, loc.y)
+                    it.setDouble(6, loc.z)
+                    it.setInt(7, island.size)
+                    it.setDouble(8, loc.x)
+                    it.setDouble(9, loc.y)
+                    it.setDouble(10, loc.z)
+                    it.setFloat(11, loc.yaw)
+                    it.setFloat(12, loc.pitch)
+                    it.setBoolean(13, island.locked)
+                    it.executeUpdate()
+                }
+            }
+
+            val members = mutableListOf<Member>()
+            members.addAll(island.members)
+            members.add(Member(island.owner, island.id))
+            saveMembers(members)
 
         }
 
     }
 
+    private fun saveMembers(members: List<Member>) {
+        async { _ ->
+
+            this.connector?.connect { connection ->
+                val statement = connection.createStatement()
+                members.forEach {
+                    statement.addBatch("REPLACE INTO ${tableName}_members (user, island) VALUES(\"${it.user}\", ${it.island})")
+                    this.members.remove(it)
+                }
+
+                statement.executeBatch()
+            }
+
+            this.members.addAll(members)
+        }
+
+
+    }
+
     /**
-     * Cache All the islands & members
+     * Cache all the islands.
      */
     private fun cacheIslands() {
-//        val list = mutableListOf<Island>()
-//        val world = this.plugin.getManager(WorldManager::class.java).world ?: return
-//
-//        CompletableFuture.runAsync {
-//            this.connector?.connect { connection ->
-//                connection.prepareStatement("SELECT * FROM ${tableName}_islands").use { preparedStatement ->
-//                    val result = preparedStatement.executeQuery()
-//
-//                    connection.createArrayOf("text")
-//                    while (result.next()) {
-//                        val islandLoc = Location(world, result.getDouble("loc_x"), result.getDouble("loc_y"), result.getDouble("loc_z"))
-//                        val spawnLoc = Location(world, result.getDouble("spawn_x", result.getString("spawn_y"), result.get))
-//                    }
-//                }
-//
-//            }
-//        }
+        val list = mutableListOf<Island>()
+        val world = this.plugin.getManager(WorldManager::class.java).world ?: return
+
+        CompletableFuture.runAsync {
+
+            this.connector?.connect { connection ->
+
+                connection.prepareStatement("SELECT * FROM ${tableName}_islands").use { preparedStatement ->
+                    val result = preparedStatement.executeQuery()
+
+                    while (result.next()) {
+                        // Define island location
+                        val islandLoc = Location(world, result.getDouble("loc_x"), result.getDouble("loc_y"), result.getDouble("loc_z"))
+                        val spawnLoc = Location(world, result.getDouble("spawn_x"), result.getDouble("spawn_y"), result.getDouble("spawn_z"), result.getFloat("spawn_yaw"), result.getFloat("spawn_pitch"))
+
+                        val island = Island(result.getInt("id"), UUID.fromString(result.getString("owner")), islandLoc, result.getString("name"))
+
+                        // Define basic values for the island
+                        island.size = result.getInt("size")
+                        island.spawnPoint = spawnLoc
+                        island.locked = result.getBoolean("locked")
+
+                        // Add all Island Members
+                        island.members = this.members.filter { member -> member.island == island.id }.toMutableList()
+                        list.add(island)
+                    }
+                }
+
+            }
+
+        }.thenRunAsync { this.islands.addAll(islands) }
+
+    }
+
+    private fun cacheMembers() {
+        val members = mutableListOf<Member>()
+
+        CompletableFuture.runAsync {
+            this.connector?.connect { connection ->
+                connection.prepareStatement("SELECT * FROM ${tableName}_members").use {
+                    val result = it.executeQuery()
+
+                    while (result.next()) members.add(Member(UUID.fromString(result.getString("user")), result.getInt("island")))
+                }
+            }
+        }.thenRunAsync { this.members.addAll(members) }
 
     }
 
@@ -100,7 +198,7 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
         this.connector?.closeConnection()
     }
 
-    fun async(callback: Consumer<BukkitTask>) {
+    private fun async(callback: Consumer<BukkitTask>) {
         Thread { this.plugin.server.scheduler.runTaskAsynchronously(plugin, callback) }.start()
     }
 

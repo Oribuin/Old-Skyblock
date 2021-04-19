@@ -3,6 +3,7 @@ package xyz.oribuin.skyblock
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.Bukkit
 import xyz.oribuin.orilibrary.OriPlugin
+import xyz.oribuin.skyblock.command.CmdIsland
 import xyz.oribuin.skyblock.manager.DataManager
 import xyz.oribuin.skyblock.manager.WorldManager
 
@@ -21,7 +22,7 @@ class Skyblock : OriPlugin() {
         })
 
         // Load Commands
-        // TODO
+        CmdIsland(this).register(null, null)
 
         // Load Listeners
         // TODO
