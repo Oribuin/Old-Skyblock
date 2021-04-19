@@ -29,8 +29,8 @@ class CmdIsland(private val plugin: Skyblock) : Command(plugin) {
             when (args[0].toLowerCase()) {
                 "border" -> {
                     val island = this.plugin.getManager(DataManager::class.java).getIsland(player)
-                    if (island != null) {
-                        NMSAdapter.handler.sendWorldBorder(player, BorderColor.BLUE, 5.0, island.location)
+                    if (island != null && args.size == 2) {
+                        NMSAdapter.handler.sendWorldBorder(player, BorderColor.valueOf(args[1].toUpperCase()), island.size.toDouble(), island.location)
                         println("Creating world border.")
                         return
                     }

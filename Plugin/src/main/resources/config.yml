@@ -13,3 +13,4 @@ mysql:
   table: oriskyblock
 
 world-name: skyblock_islands
+island-size: 200
