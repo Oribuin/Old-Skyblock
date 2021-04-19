@@ -3,11 +3,29 @@ package xyz.oribuin.skyblock
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.Bukkit
 import xyz.oribuin.orilibrary.OriPlugin
+import xyz.oribuin.skyblock.manager.DataManager
+import xyz.oribuin.skyblock.manager.WorldManager
 
 class Skyblock : OriPlugin() {
 
     override fun enablePlugin() {
+        // Check if server has vault
+        if (!hasPlugin("Vault")) return
 
+        // Load Plugin Managers Asynchronously
+        this.server.scheduler.runTaskAsynchronously(this, Runnable {
+            this.getManager(DataManager::class.java)
+            this.getManager(WorldManager::class.java)
+        })
+
+        // Load Commands
+        // TODO
+
+        // Load Listeners
+        // TODO
+
+        // Load GUIS
+        // TODO
     }
 
     override fun disablePlugin() {
