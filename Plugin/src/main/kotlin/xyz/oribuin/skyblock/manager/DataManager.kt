@@ -1,6 +1,5 @@
 package xyz.oribuin.skyblock.manager
 
-import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.OfflinePlayer
 import org.bukkit.scheduler.BukkitTask
@@ -65,9 +64,7 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
                         "CREATE TABLE IF NOT EXISTS ${tableName}_members (user VARCHAR(50), island INT, PRIMARY KEY(user))"
                     )
 
-                    val statement = connection.createStatement()
-                    queries.forEach { x -> statement.addBatch(x) }
-                    statement.executeBatch()
+                    queries.forEach { connection.prepareStatement(it).use { statement -> statement.executeUpdate() } }
 
                 }
 
@@ -218,8 +215,7 @@ class DataManager(private val plugin: Skyblock) : Manager(plugin) {
     }
 
     private fun async(callback: Consumer<BukkitTask>) {
-        Thread { this.plugin.server.scheduler.runTaskAsynchronously(plugin, callback) }.start()
+        this.plugin.server.scheduler.runTaskAsynchronously(plugin, callback)
     }
-
 
 }
